@@ -1,0 +1,21 @@
+<body>
+<script src="dumbNLP.js"></script>
+    <textarea style="width: 50%; height: 20" id="userText" placeholder="Write word or words here"></textarea>
+    <br>
+    <p id="results">Results will be displayed here</p>
+</body>
+<!--Below is the script that does the stuff based on dumbNLP.js-->
+<script>
+    //This is the code for checking after every space it listens for every key press, but then...
+    document.body.onkeyup = function(e) {
+        //Bam! if statement baby; only fire when one of these three statements is true (essentially the same, but depends on machine)
+        if (e.key == " " ||
+            e.code == "Space" ||      
+            e.keyCode == 32      
+        ) {
+            let tempText = grabCleanText('userText');
+            document.getElementById('results').innerHTML = Lemmatize(tempText);
+
+        }
+    }
+</script>

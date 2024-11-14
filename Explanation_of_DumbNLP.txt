@@ -1,0 +1,60 @@
+Do you want perfect NLP? Too bad, use SpaCy.
+Do you want pretty good NLP and you can install Node.js on your server? Don't use this, go get NLP.js
+
+Do you want a simple one-drop solution that can do some stuff kinda-okay? Great, let's do this. 
+
+Simply put the js file where your server/computer can get to it and call it before any other scripts that will use the stuff. Here are some of the functions:
+
+
+
+Lemmatize(text)
+-Takes a string, returns an array of simplified forms of words
+
+CountWords(text)
+-Takes a string, provides a word count
+
+CountSentences(text)
+-Takes a string, provides a sentene count (based on punctuation and line breaks)
+
+CalculateMLS(text)
+-Calculates the average number of words per sentence, based on the above.
+
+ProvideWords(text)
+-Takes a string, provides array of clean words (no punctuation) with capitalization removed.
+
+ProvideWordsWithPunctuation(text)
+-Takes a string, provides array of words with attached punctuation and capitalization as is
+
+ProvideNgrams(number, text)
+-Takes a number (for n) and a string, provides an array of n-grams
+
+ProvideSentences(text)
+-Takes a string, provides an array of sentences with all punctuation and capitalization in tact
+
+CompareWritingToSource(n, writing, source)
+-Takes a number (n) which represents the n-grams level to be compared, a string (writtne text) and a second string (source text). Returns a percentage copied by n-grams, and an index of the copied words that can be matched to an array of words (using ProvideWords or ProvideWordsWithPunctuation)
+
+CheckForKeywordsPreprocessed(writing_array, keywords_array)
+-Takes a pre-processed array of writing and a pre-processed array of keywords (keywords must be single words). Use either Lemmatize or ProvideWords for pre-processing depending on whether you want to match exact words or word forms. Returns a count of all keywords and a map of counts of each. Use X.keycounts.get("keyword") method to retrieve count of particular keyword from the map. Use "for (let [key, value] of X.keycounts)" to itterate over the map.
+
+
+CheckForKeywordsAndPhrasesPreprocessed(writing_array, keywords_array)
+-Same as above, but allows for keywords to be up to 5-grams long. 
+
+
+DifferentWordsPreprocessed(array)
+-Takes a pre-processed array of writing (Lemmatize is best for this as it provides base forms of words)
+-Provides a count of different words and a map of all different words and counts of each. Use X.DWCounts.get("word") to retrieve count of specific word from the map. Use "for (let [key, value] of X.DWcounts)" to itterate over the map.
+
+
+RemoveFunctionWords(array)
+-Removes all articles, pronouns, and prepositions. Useful for some TTR applications
+
+-CalculateCTTRfromArray(remove, array)
+-Takes a true/false (true = remove function words) then calculates CTTR.
+
+-CalculateCTTRfromText(remove, text)
+-Takes a true/false (true = remove function words) then calculates CTTR.
+
+-MakeMatchingArrayforLemmatization(text)
+-Creates an array that will have the same indexes as Lemmatize. This might be necessary because Lemmatize breaks apart two word contractions into single words.

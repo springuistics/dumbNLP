@@ -1,0 +1,30 @@
+<body>
+    <script src="dumbNLP.js"></script>
+        <textarea style="width: 50%; height: 20" id="userText" placeholder="Put text to check here"></textarea>
+        <br><br>
+        <textarea style="width: 50%; height: 20" id="keyWords" placeholder="Put keyphrases here, separated by a comma "></textarea>
+        <br><br>
+        <p id="results">Results will be displayed here</p>
+        <br><br>
+        <button onclick="doIt()">Run the check</button>
+    </body>
+    <!--Below is the script that does the stuff based on dumbNLP.js-->
+    <script>
+        
+        function doIt(){
+        let source = document.getElementById('userText').value;
+        let keywordList = document.getElementById('keyWords').value;
+        let keywordListArray = keywordList.split(',');
+        
+        let theTrueSource = Lemmatize(source);
+        
+        let data = CheckForKeywordsAndPhrasesPreprocessed(theTrueSource, keywordListArray);
+
+        document.getElementById('results').innerHTML = "The number of hits is: "+data.count+" and more specifically, the key counts are: <br>";
+        for (let [key, value] of data.keycounts){
+            document.getElementById('results').innerHTML += key+": "+value+"<br>";
+        }
+
+        }
+
+    </script>
