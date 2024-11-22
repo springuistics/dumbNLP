@@ -1542,7 +1542,7 @@ function Lemmatize(text){
                             possible_lemma = word;
                         } else if ((len(word, -5) == "e" && len(word,-4) == "a" && len(word, -3) == "s") || (len(word, -5) == "a" && len(word,-4) == "i" && len(word, -3) == "s") || ((len(word,-4) == "y" && len(word, -3) == "p")) || ((len(word,-4) == "r" && len(word, -3) == "c")) || ((len(word,-4) == "p" && len(word, -3) == "s")) || edSlice1Exceptions.includes(word)){
                           possible_lemma = word.slice(0,-1);
-                        } else if (word == "aimed" || word == "added" || word == "developed" || word == "focused" || word == "interpreted" || word == "misinterpreted" || (len(word, -5) == "o" && len(word, -4) == "a") || (len(word, -5) == "e" && len(word, -4) == "a") || len(word, -3) == "x" || (len(word, -4) == "e" && len(word, -3) == "n") || (len(word, -4) == "n" && len(word, -3) == "g")){
+                        } else if (word == "aimed" || word == "added" || word == "developed" || word == "focused" || word == "veiled" || word == "unveiled" || (len(word, -5) == "o" && len(word, -4) == "a") || (len(word, -5) == "e" && len(word, -4) == "a") || len(word, -3) == "x" || (len(word, -4) == "e" && len(word, -3) == "n") || (len(word, -4) == "n" && len(word, -3) == "g")){
                             possible_lemma = word.slice(0,-2);
                         } else if (len(word, -3) == "i") {
                             possible_lemma = word.slice(0,-3) + "y";
@@ -1591,7 +1591,7 @@ function Lemmatize(text){
                               possible_lemma = word.slice(0, -1);
                             } else if (len(word, -3) == "r" && len(word, -4) == "e" && len(word, -5) == len(word, -6) || word == "ordered"){
                               possible_lemma = word.slice(0, -2);
-                            } else if (len(word, -3) == "t" && len(word, -4) == "i"){
+                            } else if (len(word, -3) == "t" && (len(word, -4) == "i" || len(word, -4) == "e")){
                               possible_lemma = word.slice(0, -2);
                             } else if (vowel.includes(len(word, -5)) && len(word, -4) == len(word, -5) || len(word, -5) == "u"){
                               possible_lemma = word.slice(0, -2);
@@ -1612,7 +1612,7 @@ function Lemmatize(text){
                         possible_lemma = word.slice(0, -3) + "e";
                       } else if (word.substr((word.length - 5)) == "thing") {
                           possible_lemma = word; 
-                        } else if (word == "adding" || word == "asking" || word == "allowing" || word == "aiming" || word == "developing" || word == "waxing" || word == "focusing" || word =="freeing" || word =="interpreting" || word =="misinterpreting" || len(word, -6) == "e" && len(word, -5) == "a" || len(word, -6) == "o" && len(word, -5) == "a" || len(word, -4) == "x" || (len(word, -5) == "e" && len(word, -4) == "n") || (len(word, -5) == "n" && len(word, -4) == "g")) {
+                        } else if (word == "adding" || word == "asking" || word == "allowing" || word == "aiming" || word == "developing" || word == "waxing" || word == "focusing" || word =="freeing" || word =="unveiling" || word =="veiling" || len(word, -6) == "e" && len(word, -5) == "a" || len(word, -6) == "o" && len(word, -5) == "a" || len(word, -4) == "x" || (len(word, -5) == "e" && len(word, -4) == "n") || (len(word, -5) == "n" && len(word, -4) == "g")) {
                             possible_lemma = word.slice(0, -3);
                         } else if (word == "adhering" || word == "citing" || word == "continuing" || word == "eying" || word == "using" || word == "sharing" || word == "tiring" || word == "owing" || (len(word, 4) == "c" && len(word, 5) == "r")){
                             possible_lemma = word.slice(0, -3) + "e";
@@ -1648,7 +1648,7 @@ function Lemmatize(text){
                                   possible_lemma = word.slice(0, -3);
                                 } else if ((len(word, -5) == "e" && len(word, -6) == "i") || (len(word, -4) == "r" && len(word, -5) == "u") || word == "exciting"){
                                   possible_lemma = word.slice(0, -3) + "e";
-                                } else if (len(word, -4) == "r" && vowel.includes(len(word, -5)) || len(word, -6) == len(word, -7) || (len(word, -4) == "t" && len(word, -5) == "i")){
+                                } else if (len(word, -4) == "r" && vowel.includes(len(word, -5)) || len(word, -6) == len(word, -7) || (len(word, -4) == "t" && (len(word, -5) == "i" || len(word, -5) == "e"))){
                                   possible_lemma = word.slice(0, -3);
                                 } else if (vowel.includes(len(word, -6)) && len(word, -5) == len(word, -6) || len(word, -6) == "u"){
                                   possible_lemma = word.slice(0, -3) + "e";
