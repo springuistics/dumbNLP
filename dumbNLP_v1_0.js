@@ -1323,16 +1323,12 @@ const FunctionWords = [
     'about', 'above', 'across', 'after', 'against', 'along', 'amid', 'among', 'around', 'as', 'at', 'before', 'behind', 'below', 'beneath', 'beside', 'between', 'beyond', 'but', 'by', 'down', 'during', 'for', 'from', 'in', 'inside', 'into', 'next', 'of', 'off', 'on', 'onto', 'out', 'over', 'since', 'than', 'through', 'to', 'toward', 'under', 'underneath', 'until', 'up', 'upon', 'via', 'with', 'within', 'without', 'the', 'a', 'an', 'all', 'another', 'any', 'anybody', 'anyone', 'anything', 'as', 'both', 'each', 'either', 'everybody', 'everyone', 'everything', 'few', 'he', 'her', 'hers', 'herself', 'him', 'himself', 'his', 'i', 'it', 'its', 'itself', 'many', 'me', 'mine', 'most', 'my', 'myself', 'neither', 'nobody', 'none', 'nothing', 'one', 'other', 'others', 'our', 'ours', 'ourself', 'ourselves', 'several', 'she', 'some', 'somebody', 'someone', 'something', 'somewhat', 'such', 'that', 'their', 'theirs', 'theirself', 'theirselves', 'them', 'themself', 'themselves', 'there', 'these', 'they', 'this', 'those', 'us', 'we', 'what', 'whatever', 'whatnot', 'whatsoever', 'whence', 'where', 'whereby', 'wherefrom', 'wherein', 'whereinto', 'whereof', 'whereon', 'wheresoever', 'whereto', 'whereunto', 'wherever', 'wherewith', 'wherewithal', 'whether', 'which', 'whichever', 'whichsoever', 'who', 'whoever', 'whom', 'whomever', 'whomso', 'whomsoever', 'whose', 'whosesoever', 'whosever', 'whoso', 'whosoever', 'you', 'your', 'yours', 'yourself', 'yourselves'
 ];
 
-//These words end in s but should be left as is
-const endsExceptions = [
-  'advantageous','angeles','adventurous','always', 'as', 'ambiguous','ambitious','amphibious','analogous','angus','anonymous','anus','anxious','apparatus','aquarius','aqueous','arduous','argus','asparagus','atrocious','auspicious','autonomous',
-  'bias','bogus','bonus','bus','cactus','calculus','callous','campus','cancerous','caucus','cautious','celsius','ceremonious','census','chaos','chorus','christmas','circus','citrus','colossus','conscientious','conscious','consensus','conspicuous','contagious','contentious','contiguous','continuous','copious','coronavirus','corpus','courageous','courteous','cretaceous','curious',
-  'dangerous','deciduous','delicious','devious','disastrous','downstairs','dubious','egregious','emeritus','enormous','envious','erroneous','eucalyptus','exodus','fabulous','famous','ferocious','fetus','fictitious','focus','frivolous','fungus','furious',
-  'generous','genius','genus','glamorous','glorious','gorgeous','gracious','grievous','harmonious','hazardous','heinous','heterogeneous','hiatus','hideous','hilarious','hindus','homogeneous','horrendous','humorous','herodotus','illustrious','impetus','indigenous','infamous','infectious','ingenious','innocuous','insidious','instantaneous','intravenous',
-  'janus','jealous','jesus','joyous','jus', 'lazarus','linus','locus','lotus','ludicrous','luminous','lupus','los','luxurious','magnus','malicious','marvellous','marvelous','mauritius','maximus','menus','meticulous','minus','miraculous','miscellaneous','mischievous','momentous','monstrous','mountainous','mucus','murderous','mus','mysterious',
-  'nauseous','nervous','nexus','notorious','nowadays','nucleus','numerous','nutritious','oblivious','obnoxious','obvious','octopus','oculus','olympus','ominous','omnibus','opus','outrageous','pants','pegasus','perilous','phosphorus','pious','plus','poisonous','pompous','populous','porous','potus','precarious','precious','preposterous','prestigious','pretentious','previous','prius','prometheus','prospectus','prosperous','pus',
-  'radius','rebellious','religious','rendezvous','ridiculous','righteous','rigorous','rufus','scandalous','scotus','serious','series','simultaneous','sinus','sirius','sous','spacious','spontaneous','status','stimulus','strenuous','stylus','subconscious','sumptuous','superstitious','surplus','sus','suspicious','syllabus','synonymous',
-  'taurus','tedious','tenacious','tenuous','terminus','themselves','thus','titus','treacherous','tremendous','tumultuous','ubiquitous','unanimous','unconscious','upstairs','unscrupulous','uranus','us','uterus','various', 'whereas','venomous','venus','versus','vicious','victorious','vigorous','virtuous','virus','wondrous','zeus'
+//These words end in s but should be left as is, excluding those that end in -us
+const endsExceptions = ['angeles','always', 'as', 'bias','chaos','christmas','downstairs','los','nowadays','pants','series','themselves','upstairs','whereas'];
+
+//These words that end in -us SHOULD drop the s
+const wordsEndInU = [
+  'adius', 'bayous', 'beaus', 'bubus', 'chous', 'crus', 'emus', 'emeus', 'fugus', 'gurus','haikus','hausfraus','habus','jambeaus', 'jacus', 'jambus', 'jiujutsus', 'jujus', 'jujitsus', 'kadus', 'katsus', 'kombus', 'kudzus', 'kus', 'laulaus', 'lieus', 'leus', 'lulus', 'manteaus', 'menus', 'plateaus', 'ponzus', 'purlieus', 'sifus', 'shifus', 'shiatsus', 'sensus', 'snafus', 'tofus', 'tutus', 'urdus', 'vodous', 'wagyus', 'zulus', 'yous', 'yuzus', 'voulus'
 ];
 
 //These words end in d but should be left alone
@@ -1470,7 +1466,7 @@ function Lemmatize(text){
         else if (word.endsWith('es')) {
                     if (endsExceptions.includes(word)){
                       possible_lemma = word;
-                    }else if (word == "movies" || word == "cuties" || word == "genies" || word == "series" || word == "types" || word == "shoes" || word == "axes" || (len(word, -3) == "e" && len(word, -2) == "e")){
+                    } else if (word == "movies" || word == "cuties" || word == "genies" || word == "types" || word == "shoes" || word == "axes" || (len(word, -3) == "e" && len(word, -2) == "e")){
                       possible_lemma = word.slice(0, -1);
                     } else if (len(word, -3) == "i") {
                       possible_lemma = word.slice(0, -3) + "y";
@@ -1494,7 +1490,13 @@ function Lemmatize(text){
                         } else{possible_lemma = word;}
                     } else {possible_lemma = word;}
         } else if (word.endsWith('s')) {
-                    if (endsExceptions.includes(word)){
+                    if (len(word,-2) == "u"){
+                        if (wordsEndInU.includes(word)){
+                          possible_lemma = word.slice(0, -1);
+                        } else {
+                          possible_lemma = word;
+                        }
+                    } else if (endsExceptions.includes(word)){
                       possible_lemma = word;
                     } else if (word.endsWith('s') && len(word, -2) == "s") {
                         possible_lemma = word;
