@@ -514,6 +514,13 @@ const irregular_verbs = [
       "continuous": "paying"
     },
     {
+      "lemma": "rewrite",
+      "SVA": "rewrites",
+      "past": "rewrote",
+      "participle": "rewritten",
+      "continuous": "rewriting"
+    },
+    {
       "lemma": "ride",
       "SVA": "rides",
       "past": "rode",
@@ -750,6 +757,13 @@ const irregular_verbs = [
       "past": "stung",
       "participle": "stung",
       "continuous": "stinging"
+    },
+    {
+      "lemma": "string",
+      "SVA": "strings",
+      "past": "strang",
+      "participle": "strung",
+      "continuous": "stringing"
     },
     {
       "lemma": "stink",
@@ -1371,6 +1385,7 @@ function Lemmatize(text){
 
     //this simple functoin helps get particular letters
     function len(word, x) {let a = word.charAt(word.length + x); return a}
+    function lastx(word, x) {let a = word.slice(-x); return a}
 
     results1.forEach(function(word){
       let numberTest = /^\d*[\.,\/]?\d+$/.test(word);
@@ -1540,7 +1555,7 @@ function Lemmatize(text){
                             possible_lemma = word;
                         } else if ( ((word.charAt(0) == "u" && word.charAt(1) == "n") && !(word.charAt(2) == "d" && word.charAt(3) == "e" && word.charAt(4) == "r")) && !beginUNedExceptions.includes(word)){
                             possible_lemma = word;
-                        } else if ((len(word, -5) == "e" && len(word,-4) == "a" && len(word, -3) == "s") || (len(word, -5) == "a" && len(word,-4) == "i" && len(word, -3) == "s") || ((len(word,-4) == "y" && len(word, -3) == "p")) || ((len(word,-4) == "r" && len(word, -3) == "c")) || ((len(word,-4) == "p" && len(word, -3) == "s")) || edSlice1Exceptions.includes(word)){
+                        } else if ((len(word, -5) == "e" && len(word,-4) == "a" && len(word, -3) == "s") || (len(word, -5) == "a" && len(word,-4) == "i" && len(word, -3) == "s") || ((len(word,-4) == "y" && len(word, -3) == "p")) || ((len(word,-4) == "r" && len(word, -3) == "c")) || ((len(word,-4) == "p" && len(word, -3) == "s")) || lastx(word, 7) == "changed" || lastx(word, 6) == "ranged" || lastx(word, 5) == "inged" || edSlice1Exceptions.includes(word)){
                           possible_lemma = word.slice(0,-1);
                         } else if (word == "aimed" || word == "added" || word == "developed" || word == "focused" || word == "veiled" || word == "unveiled" || (len(word, -5) == "o" && len(word, -4) == "a") || (len(word, -5) == "e" && len(word, -4) == "a") || len(word, -3) == "x" || (len(word, -4) == "e" && len(word, -3) == "n") || (len(word, -4) == "n" && len(word, -3) == "g")){
                             possible_lemma = word.slice(0,-2);
@@ -1593,7 +1608,7 @@ function Lemmatize(text){
                               possible_lemma = word.slice(0, -2);
                             } else if (len(word, -3) == "t" && (len(word, -4) == "i" || len(word, -4) == "e")){
                               possible_lemma = word.slice(0, -2);
-                            } else if (vowel.includes(len(word, -5)) && len(word, -4) == len(word, -5) || len(word, -5) == "u"){
+                            } else if (vowel.includes(len(word, -5)) && len(word, -4) == len(word, -5) || (len(word, -5) == "u" && !(len(word, -4)=="a" && len(word, -3)=="t"))){
                               possible_lemma = word.slice(0, -2);
                             } else if (len(word, -3) == "r" && vowel.includes(len(word, -5))|| len(word, -3) == "g" && vowel.includes(len(word, -5))|| len(word, -3) == "d" && vowel.includes(len(word, -5)) || len(word, -3) == "w"){
                               possible_lemma = word.slice(0, -2);
@@ -1612,7 +1627,7 @@ function Lemmatize(text){
                         possible_lemma = word.slice(0, -3) + "e";
                       } else if (word.substr((word.length - 5)) == "thing") {
                           possible_lemma = word; 
-                        } else if (word == "adding" || word == "asking" || word == "allowing" || word == "aiming" || word == "developing" || word == "waxing" || word == "focusing" || word =="freeing" || word =="unveiling" || word =="veiling" || len(word, -6) == "e" && len(word, -5) == "a" || len(word, -6) == "o" && len(word, -5) == "a" || len(word, -4) == "x" || (len(word, -5) == "e" && len(word, -4) == "n") || (len(word, -5) == "n" && len(word, -4) == "g")) {
+                        } else if (word == "adding" || word == "asking" || word == "allowing" || word == "aiming" || word == "developing" || word == "waxing" || word == "focusing" || word =="freeing" || word =="unveiling" || word =="veiling" || len(word, -6) == "e" && len(word, -5) == "a" || len(word, -6) == "o" && len(word, -5) == "a" || len(word, -4) == "x" || (len(word, -5) == "e" && len(word, -4) == "n") || ((len(word, -5) == "n" && len(word, -4) == "g") && (lastx(word, 8) == "changing" || lastx(word, 6) == "ranging" || lastx(word, 5) == "inging" ))) {
                             possible_lemma = word.slice(0, -3);
                         } else if (word == "adhering" || word == "citing" || word == "continuing" || word == "eying" || word == "using" || word == "sharing" || word == "tiring" || word == "owing" || (len(word, 4) == "c" && len(word, 5) == "r")){
                             possible_lemma = word.slice(0, -3) + "e";
@@ -1650,7 +1665,7 @@ function Lemmatize(text){
                                   possible_lemma = word.slice(0, -3) + "e";
                                 } else if (len(word, -4) == "r" && vowel.includes(len(word, -5)) || len(word, -6) == len(word, -7) || (len(word, -4) == "t" && (len(word, -5) == "i" || len(word, -5) == "e"))){
                                   possible_lemma = word.slice(0, -3);
-                                } else if (vowel.includes(len(word, -6)) && len(word, -5) == len(word, -6) || len(word, -6) == "u"){
+                                } else if (vowel.includes(len(word, -6)) && len(word, -5) == len(word, -6) || (len(word, -6) == "u" && !(len(word, -5)=="a" && len(word, -4)=="t"))){
                                   possible_lemma = word.slice(0, -3) + "e";
                                 } else if (len(word, -4) == "r" && vowel.includes(len(word, -6))|| len(word, -4) == "g" && vowel.includes(len(word, -6))|| len(word, -4) == "d" && vowel.includes(len(word, -6)) || len(word, -4) == "w"){
                                   possible_lemma = word.slice(0, -3) + "e";
