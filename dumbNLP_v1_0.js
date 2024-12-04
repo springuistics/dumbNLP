@@ -1643,7 +1643,7 @@ function Lemmatize(text){
                             } else {
                               possible_lemma = word.slice(0, -3);
                             }
-                        } else if (len(word, -4) == "r" && len(word, -5) == "e" || len(word, -4) == "l" && len(word, -5) == "e"){
+                        } else if ((len(word, -4) == "r" && len(word, -5) == "e") || (len(word, -4) == "l" && len(word, -5) == "e") || (len(word, -4) == "r" && len(word, -5) == "o") || (len(word, -6) == "a" && len(word, -5) == "i")){
                             possible_lemma = word.slice(0, -3);
                         } else if (vowel.includes(len(word, -5) && len(word, -5) == len(word, -6))) {
                                 possible_lemma = word.slice(0, -3);
@@ -1659,11 +1659,11 @@ function Lemmatize(text){
                             }
                         } else if (!vowel.includes(len(word, -4))) {
                             if (vowel.includes(len(word, -5))) {
-                               if (len(word, -6) == len(word, -5)){
+                               if (len(word, -6) == len(word, -5) || (len(word, -4) == "r" && vowel.includes(len(word, -6)) )){
                                   possible_lemma = word.slice(0, -3);
                                 } else if ((len(word, -5) == "e" && len(word, -6) == "i") || (len(word, -4) == "r" && len(word, -5) == "u") || word == "exciting"){
                                   possible_lemma = word.slice(0, -3) + "e";
-                                } else if (len(word, -4) == "r" && vowel.includes(len(word, -5)) || len(word, -6) == len(word, -7) || (len(word, -4) == "t" && (len(word, -5) == "i" || len(word, -5) == "e"))){
+                                } else if (len(word, -6) == len(word, -7) || (len(word, -4) == "t" && (len(word, -5) == "i" || len(word, -5) == "e"))){
                                   possible_lemma = word.slice(0, -3);
                                 } else if (vowel.includes(len(word, -6)) && len(word, -5) == len(word, -6) || (len(word, -6) == "u" && !(len(word, -5)=="a" && len(word, -4)=="t"))){
                                   possible_lemma = word.slice(0, -3) + "e";
