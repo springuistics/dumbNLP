@@ -1675,7 +1675,7 @@ function Lemmatize(text){
                                 } else if (vowel.includes(len(word, -6)) && len(word, -5) == len(word, -6) || (len(word, -6) == "u" && !(len(word, -5)=="a" && len(word, -4)=="t"))){
                                   possible_lemma = word.slice(0, -3) + "e";
                                 } else if (len(word, -4) == "r" && vowel.includes(len(word, -6))|| len(word, -4) == "g" && vowel.includes(len(word, -6))|| len(word, -4) == "d" && vowel.includes(len(word, -6)) || len(word, -4) == "w"){
-                                  possible_lemma = word.slice(0, -3) + "e";
+                                  possible_lemma = word.slice(0, -3);
                                 } else {
                                   possible_lemma = word.slice(0, -3) + "e";
                                 } 
