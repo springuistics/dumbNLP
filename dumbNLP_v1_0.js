@@ -1385,7 +1385,12 @@ function Lemmatize(text){
     let temp1 = text.toLowerCase();
     let temp2 = temp1.replace(/[#"!$%\^&\*;:?{}=\_`~()]/gm,"");
     temp2 = temp2.replace(/[\r\n/\\]+/gm, " ");
-    let temp3 = temp2.replace(/-/g," ");
+    const hyphenExceptions = ["pre", "non", "re", "co", "semi", "quasi", "post", "pro", "under", "mid", "inter", "pseudo", "anti", "contra", "multi", "ultra"];
+    const replaceHyphen = (str) => {
+      const regexHyphen = new RegExp(`\\b(?!${hyphenExceptions.join("|")})([a-z]+)-([a-z]+)\\b`, "gi");
+      return str.replace(regexHyphen, "$1 $2");
+    };
+    let temp3 = replaceHyphen(temp2);
     let temp4 = temp3.replace(/\s\s+/g, ' ');
     let results1 = temp4.split(" ");
     let results = [];
