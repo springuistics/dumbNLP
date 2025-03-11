@@ -2027,12 +2027,7 @@ function DifferentWordsPreprocessed(array){
 
 //Takes a pre-processed array of writing. Removes all function words (pronouns, prepositions, articles) - useful for types of text density / TTR ratios.
 function RemoveFunctionWords(inputArray){
-    for (let i=0; i<inputArray.length; i++){
-        if (FunctionWords.includes(inputArray[i])){
-          inputArray.splice(i,1)
-        }
-    }
-    return inputArray;
+  return inputArray.filter(word => !FunctionWords.includes(word));
 }
 
 //Takes true / false (true = remove function words, false = do not remove them) and a pre-processed (already lemmatized) array of writing. Calculates CTTR.
