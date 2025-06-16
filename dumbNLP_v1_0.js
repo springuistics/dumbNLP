@@ -1800,9 +1800,42 @@ function ProvideNgrams(number, text){
 
 //Takes a string, provides an array of sentences as is;
 function ProvideSentences(text){
-  let temp = text.replace(/(\r\n|\n|\r)/g, ". ");
-  let temp2 = temp.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
-  return temp2;
+  let cleaned = text.replace(/(\r\n|\n|\r)/g, ". "); // Replace line breaks with periods and spaces
+  // List of abbreviations that should not trigger a split
+  const abbreviations = ["Mr.", "mr.", "Mrs.", "mrs.", "Ms.", "ms.", "Dr.", "dr.", "Prof.", "prof.", "Sr.", "sr.", "St.", "st."];
+  let sentences = [];
+  let buffer = "";
+  let i = 0;
+  while (i < cleaned.length) {
+      const char = cleaned[i];
+      buffer += char;
+
+      if (char === "." || char === "!" || char === "?") {
+        // Look ahead: skip whitespace to check if a sentence ends
+        let j = i + 1;
+        while (j < cleaned.length && /\s/.test(cleaned[j])) {
+          j++;
+        }
+
+        // Check if this is an abbreviation
+        let lastWord = buffer.trim().split(/\s+/).slice(-1)[0];
+        if (!abbreviations.includes(lastWord)) {
+          // If not an abbreviation, treat it as a sentence boundary
+          sentences.push(buffer.trim());
+          buffer = "";
+          i = j - 1; // move to next non-whitespace char
+        }
+      }
+
+      i++;
+  }
+
+  // Push any remaining buffer content
+  if (buffer.trim()) {
+    sentences.push(buffer.trim());
+  }
+
+  return sentences;
 }
 
 //Takes a number (n) which represents the n-grams to be compared, then a string (written text) and a second string (scoure text). 
