@@ -1630,7 +1630,7 @@ function Lemmatize(text){
                         } else {possible_lemma = word;}
         }  else if (word.endsWith('ing')) {
           let oringBackExceptions = ['acquiring', 'creating', 'convening', 'recreating', 'persuading', 'boring', 'requiring', 'quoting', 'inspiring', 'assuming', 'poring', 'goring', 'coring', 'scoring', 'adoring', 'snoring', 'choring', 'whoring', 'storing', 'ignoring', 'encoring', 'restoring', 'exploring', 'imploring', 'outscoring', 'deploring', 'underscoring', 'unrestoring'];
-          let leaveAloneExceptions = ['boing', 'bring', 'ceiling', 'during', 'evening', 'king',  'ongoing', 'outing', 'outgoing', 'offspring', 'outstanding', 'ring', 'sing', 'sling', 'spring', 'handspring', 'wellspring', 'sting', 'string', 'hamstring', 'drawstring', 'heartstring', 'shoestring', 'swing','thing', 'well-being', 'wing', 'wring']
+          let leaveAloneExceptions = ['boing', 'bring', 'ceiling', 'during', 'evening', 'king', 'morning', 'ongoing', 'outing', 'outgoing', 'offspring', 'outstanding', 'ring', 'sing', 'sling', 'spring', 'handspring', 'wellspring', 'sting', 'string', 'hamstring', 'drawstring', 'heartstring', 'shoestring', 'swing','thing', 'well-being', 'wing', 'wring']
                       if (leaveAloneExceptions.includes(word)) {
                           possible_lemma = word;
                       } else if ( ((word.charAt(0) == "u" && word.charAt(1) == "n") && !(word.charAt(2) == "d" && word.charAt(3) == "e" && word.charAt(4) == "r")) && !beginUNingExceptions.includes(word)){
