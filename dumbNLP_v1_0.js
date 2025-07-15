@@ -1345,7 +1345,7 @@ const FunctionWords = [
 ];
 
 //These words end in s but should be left as is, excluding those that end in -us
-const endsExceptions = ['angeles','always', 'as', 'bias','chaos','christmas','downstairs','los','nowadays','pants','series','themselves','upstairs','whereas'];
+const endsExceptions = ['angeles','always', 'as', 'bias','chaos','christmas','downstairs','los','nowadays','ourselves','pants','series','themselves','upstairs','whereas','yourselves'];
 
 //These words that end in -us SHOULD drop the s
 const wordsEndInU = [
@@ -1384,6 +1384,7 @@ function Lemmatize(text){
     //Double check that there are no erronious spaces etc
     let temp1 = text.toLowerCase();
     let temp2 = temp1.replace(/[#"!$%\^&\*;:?{}=\_`~()]/gm,"");
+    temp2 = temp2.replace(/[\u2014\u2013]/gm, " ");
     temp2 = temp2.replace(/[\r\n/\\]+/gm, " ");
     const hyphenExceptions = ["pre", "non", "re", "co", "semi", "quasi", "post", "pro", "under", "mid", "inter", "pseudo", "anti", "contra", "multi", "ultra"];
     const replaceHyphen = (str) => {
