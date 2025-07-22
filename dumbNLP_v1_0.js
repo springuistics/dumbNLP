@@ -1345,7 +1345,7 @@ const FunctionWords = [
 ];
 
 //These words end in s but should be left as is, excluding those that end in -us
-const endsExceptions = ['angeles','always', 'as', 'bias','chaos','christmas','downstairs','los','nowadays','ourselves','pants','series','themselves','upstairs','whereas','yourselves'];
+const endsExceptions = ['angeles','always', 'as', 'bias','chaos','christmas','downstairs','kansas','los','nowadays','ourselves','pants','series','themselves','upstairs','whereas','yourselves'];
 
 //These words that end in -us SHOULD drop the s
 const wordsEndInU = [
@@ -1356,10 +1356,10 @@ const wordsEndInU = [
 const endsDExceptions = [
   'bed', 'biped', 'bloodshed', 'breed', 'creed', 'cred', 'crossbreed', 'coed', 'deed', 'deathbed', 'dogsled', 'dead', 'ed', 'fred', 'flowerbed', 'feed', 'ged', 'greed', 'heed', 'hatred', 'hotbed', 'handicapped', 'hundred', 'infared', 'indeed',
   'kindred', 'led', 'leed', 'meed', 'milliped', 'milkweed', 'med', 'need', 'nosebleed', 'newlywed', 'ped', 'qed', 'red', 'reed', 'roadbed', 'riverbed', 'shed', 'seed', 'grapeseed', 
-  'multifaceted', 'sled', 'speed', 'steed', 'screed', 'seabed', 'seaweed', 'sickbed', 'thoroughbred', 'tweed', 'tumbleweed', 'toolshed', 'watershed', 'woodshed', 'wed', 'weed'];
+  'multifaceted', 'sled', 'speed', 'steed', 'screed', 'seabed', 'seasoned','seaweed', 'sickbed', 'thoroughbred', 'tweed', 'tumbleweed', 'toolshed', 'watershed', 'woodshed', 'wed', 'weed'];
 
 //These are letters that precede ed/ing that should be removed but an e should be written there
-const eBackExceptions = ['at', 'dg', 'ng', 'lg', 'rg', 'nc', 'bl', 'cl', 'dl', 'fl', 'gl', 'pl', 'kl', 'tl', 'xl', 'yl', 'br', 'cr', 'gr', 'tr', 'yr', 'lv', 'rv', 'rs', 'yz', 'ys', 'zl', 'nz'];
+const eBackExceptions = ['at', 'dg', 'ng', 'lg', 'rg', 'nc', 'bl', 'cl', 'dl', 'fl', 'gl', 'pl', 'kl', 'tl', 'xl', 'yl', 'br', 'cr', 'gr', 'tr', 'yr', 'lv', 'rc','rv', 'rs', 'yz', 'ys', 'zl', 'nz'];
 
 //These are exceptions to the l rule
 const llBack2to1 = ["dial", "expel", "fuel", "wool", "panel", "lapel", "repel", "gruel", "gravel", "level", "mural", "petal", "metal", "total", "cabal", "jewel", "brail", "excel", "label", "annul", "equal", "hovel", "libel", "refuel", "chisel", "funnel", "tunnel", "rappel", "defuel", "drivel", "laurel", "travel", "dispel", "swivel", "tinsel", "weasel", "tassel", "compel", "propel", "redial", "cancel", "parcel", "corral", "shovel", "snivel", "spiral", "patrol", "symbol", "control", "bedevil", "initial", "stencil", "bejewel", "misdial", "lateral", "trammel", "pummel", "tendril", "marshal", "quarrel", "counsel", "council", "backpedal", "disembowel", "squirrel", "parallel", "credential", "label"]
