@@ -1359,7 +1359,7 @@ const endsDExceptions = [
   'multifaceted', 'sled', 'speed', 'steed', 'screed', 'seabed', 'seasoned','seaweed', 'sickbed', 'succeed', 'thoroughbred', 'tweed', 'tumbleweed', 'toolshed', 'watershed', 'woodshed', 'wed', 'weed'];
 
 //These are letters that precede ed/ing that should be removed but an e should be written there
-const eBackExceptions = ['at', 'dg', 'ng', 'lg', 'rg', 'nc', 'bl', 'cl', 'dl', 'fl', 'gl', 'pl', 'kl', 'tl', 'xl', 'yl', 'br', 'cr', 'gr', 'tr', 'yr', 'lv', 'rc','rv', 'rs', 'yz', 'ys', 'zl', 'nz'];
+const eBackExceptions = ['at', 'dg', 'ng', 'ns', 'lg', 'rg', 'nc', 'bl', 'cl', 'dl', 'fl', 'gl', 'pl', 'kl', 'tl', 'xl', 'yl', 'br', 'cr', 'gr', 'tr', 'yr', 'lv', 'rc','rv', 'rs', 'yz', 'ys', 'zl', 'nz'];
 
 //These are exceptions to the l rule
 const llBack2to1 = ["dial", "expel", "fuel", "wool", "panel", "lapel", "repel", "gruel", "gravel", "level", "mural", "petal", "metal", "total", "cabal", "jewel", "brail", "excel", "label", "annul", "equal", "hovel", "libel", "refuel", "chisel", "funnel", "tunnel", "rappel", "defuel", "drivel", "laurel", "travel", "dispel", "swivel", "tinsel", "weasel", "tassel", "compel", "propel", "redial", "cancel", "parcel", "corral", "shovel", "snivel", "spiral", "patrol", "symbol", "control", "bedevil", "initial", "stencil", "bejewel", "misdial", "lateral", "trammel", "pummel", "tendril", "marshal", "quarrel", "counsel", "council", "backpedal", "disembowel", "squirrel", "parallel", "credential", "label"]
@@ -1536,9 +1536,9 @@ function Lemmatize(text){
                         possible_lemma = word.slice(word, -1);
                     }
         } else if (word.endsWith('er')) {
-                  const commonadjs = ['blacker', 'blanker', 'bolder', 'brasher', 'briefer', 'brighter', 'calmer', 'cheaper', 'chiller', 'cleaner', 'clearer', 'crisper', 'cleverer', 'deader', 'deeper', 'defter', 'drunker', 'duller', 'dumber', 'fainter', 'fairer', 'faster', 'firmer', 'flatter', 'fouler', 'franker', 'fuller', 'grander', 'greater', 'greener', 'grosser', 'harder', 'higher', 'hollower', 'iller', 'kinder', 'laxer', 'leaner', 'lesser', 'lighter', 'longer', 'louder', 'lower', 'meaner', 'moister', 'narrower', 'nearer', 'odder', 'plumper', 'prouder', 'quieter', 'rasher', 'richer', 'righter', 'rounder', 'rougher', 'sharper', 'shorter', 'shyer', 'sicker', 'sleeker', 'slower', 'smoother', 'sourer', 'steeper', 'sterner', 'stiller', 'straighter', 'stricter', 'stronger','stupider', 'swifter', 'tenderer', 'tighter', 'warmer', 'weirder', 'wilder', 'yellower', 'younger'];
+                  const commonadjs = ['blacker', 'blanker', 'bolder', 'brasher', 'briefer', 'brighter', 'calmer', 'cheaper', 'chiller', 'cleaner', 'clearer', 'crisper', 'cleverer', 'deader', 'deeper', 'defter', 'drunker', 'duller', 'dumber', 'fainter', 'fairer', 'faster', 'firmer', 'flatter', 'fouler', 'franker', 'fuller', 'grander', 'greater', 'greener', 'grosser', 'harder', 'higher', 'hollower', 'iller', 'kinder', 'laxer', 'leaner', 'lesser', 'lighter', 'longer', 'louder', 'lower', 'meaner', 'moister', 'narrower', 'nearer', 'newer', 'odder', 'plumper', 'prouder', 'quieter', 'rasher', 'richer', 'righter', 'rounder', 'rougher', 'sharper', 'shorter', 'shyer', 'sicker', 'sleeker', 'slower', 'smaller', 'smoother', 'sourer', 'steeper', 'sterner', 'stiller', 'straighter', 'stricter', 'stronger','stupider', 'swifter', 'tenderer', 'tighter', 'warmer', 'weirder', 'wilder', 'yellower', 'younger'];
                   const commonadjs2 = ['bluer', 'braver', 'closer', 'completer', 'falser', 'finer', 'freer', 'gentler', 'graver', 'humbler', 'larger','lamer', 'looser', 'nicer', 'politer', 'purer', 'rarer', 'ripder', 'safer', 'securer', 'simpler', 'squarer', 'tamer', 'truer', 'whiter'];
-                  const commonadjs3 = ['angrier', 'bloodier', 'bossier', 'busier', 'chewier', 'chubbier', 'classier', 'cloudier', 'clumsier', 'crazier', 'creepier', 'crunchier', 'curlier', 'deadlier', 'dirtier', 'drier', 'earlier', 'easier', 'emptier', 'fancier', 'filthier', 'flakier', 'funnier', 'furrier', 'greasier', 'gloomier', 'greedier', 'happier','healthier', 'heavier', 'hungrier', 'juicier', 'lazier', 'lonelier', 'prettier', 'readier', 'roomier', 'saltier', 'shinier', 'skinnier', 'smellier', 'windier', 'wealthier', 'tidier'];
+                  const commonadjs3 = ['angrier', 'bloodier', 'bossier', 'busier', 'chewier', 'chubbier', 'classier', 'cloudier', 'clumsier', 'crazier', 'creepier', 'crunchier', 'curlier', 'deadlier', 'dirtier', 'drier', 'earlier', 'easier', 'emptier', 'fancier', 'filthier', 'flakier', 'funnier', 'furrier', 'greasier', 'gloomier', 'greedier', 'happier','healthier', 'heavier', 'hungrier', 'juicier', 'lazier', 'littler','lonelier', 'prettier', 'readier', 'roomier', 'saltier', 'shinier', 'skinnier', 'smellier', 'windier', 'wealthier', 'tidier'];
                   if (commonadjs.includes(word)){
                     possible_lemma = word.slice(0, -2);
                   } else if (word == "bigger" || word == "dimmer" || word == "fitter" || word == "hotter" || word=="fatter" || word == "madder" || word =="redder" || word == "sadder" || word == "slimmer" || word == "wetter"){
@@ -1549,9 +1549,9 @@ function Lemmatize(text){
                     possible_lemma = word.slice(0, -3) + "y";
                   } else {possible_lemma = word;}
         } else if (word.endsWith('est')) {
-                  const commonadjest = ['blackest', 'blankest', 'boldest', 'brashest', 'brightest', 'briefest', 'calmest', 'cheapest', 'chillest', 'cleanest', 'clearest', 'cleverst', 'crispest', 'deadest', 'deepest', 'deftest', 'drunkest', 'dullest', 'dumbest', 'faintest', 'fairest', 'fastest', 'firmest', 'flattest', 'foulest', 'frankest', 'fullest', 'grandest', 'greatest', 'greenest', 'grossest', 'hardest', 'highest', 'hollowest', 'illest', 'kindest', 'laxest', 'leanest', 'lightest', 'longest', 'loudest', 'lowest', 'meanest', 'moistest', 'narrowest', 'nearest', 'numbest', 'oddest', 'plumpest', 'proudest', 'quietest', 'rashest', 'richest', 'rightest', 'roundest', 'roughest', 'sharpest', 'shortest', 'shyest', 'sickest', 'sleekest', 'slowest', 'smoothest', 'sourest', 'steepest', 'sternest', 'stillest', 'straightest', 'strictest','strongest','stupidest', 'swiftest', 'tenderest', 'tightest', 'warmest', 'weirdest', 'wildest', 'yellowest', 'youngest'];
+                  const commonadjest = ['blackest', 'blankest', 'boldest', 'brashest', 'brightest', 'briefest', 'calmest', 'cheapest', 'chillest', 'cleanest', 'clearest', 'cleverst', 'crispest', 'deadest', 'deepest', 'deftest', 'drunkest', 'dullest', 'dumbest', 'faintest', 'fairest', 'fastest', 'firmest', 'flattest', 'foulest', 'frankest', 'fullest', 'grandest', 'greatest', 'greenest', 'grossest', 'hardest', 'highest', 'hollowest', 'illest', 'kindest', 'laxest', 'leanest', 'lightest', 'longest', 'loudest', 'lowest', 'meanest', 'moistest', 'narrowest', 'nearest', 'newest', 'numbest', 'oddest', 'plumpest', 'proudest', 'quietest', 'rashest', 'richest', 'rightest', 'roundest', 'roughest', 'sharpest', 'shortest', 'shyest', 'sickest', 'sleekest', 'slowest', 'smallest', 'smoothest', 'sourest', 'steepest', 'sternest', 'stillest', 'straightest', 'strictest','strongest','stupidest', 'swiftest', 'tenderest', 'tightest', 'warmest', 'weirdest', 'wildest', 'yellowest', 'youngest'];
                   const commonadjest2 = ['bluest', 'bravest', 'closest', 'completest', 'gentlest', 'falsest', 'finest', 'freest', 'gravest', 'humblest', 'largest', 'lamest', 'loosest', 'nicest', 'politest', 'purest', 'rarest', 'ripest', 'safest', 'securest', 'simplest', 'squarest', 'strangest', 'tamest', 'truest', 'whitest'];
-                  const commonadjest3 = ['angriest', 'bloodiest', 'bossiest', 'busiest', 'chewiest', 'chubbiest', 'classiest', 'cloudiest', 'clumsiest', 'craziest', 'creepiest', 'crunchiest', 'curliest', 'deadliest', 'dirtiest', 'driest', 'earliest', 'easiest', 'emptiest', 'fanciest', 'filthiest', 'flakiest', 'funniest', 'furriest', 'greasiest', 'gloomiest', 'greediest', 'happiest','healthiest', 'heaviest', 'hungriest', 'juiciest', 'laziest', 'loneliest', 'prettiest', 'readiest', 'roomiest', 'saltiest', 'shiniest', 'skinniest', 'smelliest', 'windiest', 'wealthiest','tidiest'];
+                  const commonadjest3 = ['angriest', 'bloodiest', 'bossiest', 'busiest', 'chewiest', 'chubbiest', 'classiest', 'cloudiest', 'clumsiest', 'craziest', 'creepiest', 'crunchiest', 'curliest', 'deadliest', 'dirtiest', 'driest', 'earliest', 'easiest', 'emptiest', 'fanciest', 'filthiest', 'flakiest', 'funniest', 'furriest', 'greasiest', 'gloomiest', 'greediest', 'happiest','healthiest', 'heaviest', 'hungriest', 'juiciest', 'laziest', 'littlest', 'loneliest', 'prettiest', 'readiest', 'roomiest', 'saltiest', 'shiniest', 'skinniest', 'smelliest', 'windiest', 'wealthiest','tidiest'];
                   if (commonadjest.includes(word)){
                     possible_lemma = word.slice(0, -3);
                   } else if (word == "biggest" || word == "dimmest" || word == "fittest" || word == "hottest" || word == "maddest" || word == "reddest" || word == "saddest" || word == "slimmest" || word == "wettest" || word == "fattest"){
@@ -1564,13 +1564,16 @@ function Lemmatize(text){
         } else if (word.endsWith('ed')) {
           let oredBackExceptions = ['bored', 'pored', 'gored', 'cored', 'scored', 'adored', 'snored', 'chored', 'whored', 'stored', 'ignored', 'encored', 'restored', 'explored', 'implored', 'outscored', 'deplored', 'underscored', 'unrestored', "unopened"];
           let edSlice1Exceptions = ["adhered","axed","cited","cleansed","convened","continued","created","freed","guided","intrigued","owed","recreated","shared","typed"];
+          const edSlice2Exception = ['aimed', 'added', 'developed', 'erred', 'focused', 'purred', 'ordered','opened', 'reopened', 'reasoned','veiled', 'unveiled']
                         if (endsDExceptions.includes(word)) {
                             possible_lemma = word;
-                        } else if ( ((word.charAt(0) == "u" && word.charAt(1) == "n") && !(word.charAt(2) == "d" && word.charAt(3) == "e" && word.charAt(4) == "r")) && !beginUNedExceptions.includes(word)){
+                        } else if (edSlice2Exception.includes(word)){
+                            possible_lemma = word.slice(0,-2);
+                        }else if ( ((word.charAt(0) == "u" && word.charAt(1) == "n") && !(word.charAt(2) == "d" && word.charAt(3) == "e" && word.charAt(4) == "r")) && !beginUNedExceptions.includes(word)){
                             possible_lemma = word;
                         } else if ((len(word, -5) == "e" && len(word,-4) == "a" && len(word, -3) == "s") || (len(word, -5) == "a" && len(word,-4) == "i" && len(word, -3) == "s") || ((len(word,-4) == "y" && len(word, -3) == "p")) || ((len(word,-4) == "r" && len(word, -3) == "c")) || ((len(word,-4) == "p" && len(word, -3) == "s")) || word =="aged" || word =="challenged" || lastx(word, 7) == "changed" || lastx(word, 6) == "ranged" || lastx(word, 5) == "inged" || edSlice1Exceptions.includes(word)){
                           possible_lemma = word.slice(0,-1);
-                        } else if (word == "aimed" || word == "added" || word == "developed" || word == "focused" || word == "veiled" || word == "unveiled" || (len(word, -5) == "o" && len(word, -4) == "a") || (len(word, -5) == "e" && len(word, -4) == "a") || len(word, -3) == "x" || (len(word, -4) == "e" && len(word, -3) == "n") || (len(word, -4) == "n" && len(word, -3) == "g")){
+                        } else if ((len(word, -5) == "o" && len(word, -4) == "a") || (len(word, -5) == "e" && len(word, -4) == "a") || len(word, -3) == "x" || (len(word, -4) == "e" && len(word, -3) == "n") || (len(word, -4) == "n" && len(word, -3) == "g")){
                             possible_lemma = word.slice(0,-2);
                         } else if (len(word, -3) == "i") {
                             possible_lemma = word.slice(0,-3) + "y";
@@ -1579,9 +1582,7 @@ function Lemmatize(text){
                         } else if (len(word, -3) == "e") {
                             possible_lemma = word.slice(0,-1);
                         } else if (vowel.includes(len(word, -4)) && len(word, -3) =="n") {
-                            if (word == "opened" || word == "reopened" || word == "reasoned") {
-                              possible_lemma = word.slice(0, -2);
-                            } else if (!vowel.includes(len(word, -5))){
+                            if (!vowel.includes(len(word, -5))){
                               possible_lemma = word.slice(0, -1);
                             } else {
                               possible_lemma = word.slice(0, -2);
@@ -1593,7 +1594,7 @@ function Lemmatize(text){
                               possible_lemma = word.slice(0, -2);
                               }
                         } else if (len(word, -3) == len(word, -4)) {
-                            if (len(word, -3) == "s" || len(word, -3) == "l" || word == "erred" || word == "purred"){
+                            if (len(word, -3) == "s" || len(word, -3) == "l"){
                               if (llBack2to1.includes(word.slice(0, -3))){
                                 possible_lemma = word.slice(0, -3);
                               } else {
@@ -1615,9 +1616,10 @@ function Lemmatize(text){
                               possible_lemma = word.slice(0, -2);
                             }
                         } else if (!vowel.includes(len(word, -3)) && vowel.includes(len(word, -4))) {
-                            if (word == "acquired" || word == "persuaded" || word == "required" || word == "quoted" || word == "excited"){
+                          const lowerEdvcExceptions = ["acquired", "excited", "invited", "persuaded", "quoted", "required"];
+                            if (lowerEdvcExceptions.includes(word)){
                               possible_lemma = word.slice(0, -1);
-                            } else if (len(word, -3) == "r" && len(word, -4) == "e" && len(word, -5) == len(word, -6) || word == "ordered"){
+                            } else if (len(word, -3) == "r" && len(word, -4) == "e" && len(word, -5) == len(word, -6) ){
                               possible_lemma = word.slice(0, -2);
                             } else if (len(word, -3) == "t" && (len(word, -4) == "i" || len(word, -4) == "e")){
                               possible_lemma = word.slice(0, -2);
@@ -1632,26 +1634,30 @@ function Lemmatize(text){
         }  else if (word.endsWith('ing')) {
           let oringBackExceptions = ['acquiring', 'creating', 'convening', 'recreating', 'persuading', 'boring', 'requiring', 'quoting', 'inspiring', 'assuming', 'poring', 'goring', 'coring', 'scoring', 'adoring', 'snoring', 'choring', 'whoring', 'storing', 'ignoring', 'encoring', 'restoring', 'exploring', 'imploring', 'outscoring', 'deploring', 'underscoring', 'unrestoring'];
           let leaveAloneExceptions = ['boing', 'bring', 'ceiling', 'during', 'evening', 'king', 'morning', 'ongoing', 'outing', 'outgoing', 'offspring', 'outstanding', 'ring', 'sing', 'sling', 'spring', 'handspring', 'wellspring', 'sting', 'string', 'hamstring', 'drawstring', 'heartstring', 'shoestring', 'swing','thing', 'well-being', 'wing', 'wring']
+          const ingTocutExceptions = ['adding', 'asking', 'allowing', 'aiming', 'developing', 'erring','focusing','freezing', 'opening', 'reopening', 'reasoning','unveiling','veiling','waxing'];
+          const ingToaddEExceptions = ['adhering', 'citing', 'continuing', 'exciting', 'eying', 'inviting','owing', 'sharing','tiring', 'using'];
                       if (leaveAloneExceptions.includes(word)) {
                           possible_lemma = word;
+                      } else if (ingTocutExceptions.includes(word)){
+                        possible_lemma = word.slice(0, -3);
+                      } else if (ingToaddEExceptions.includes(word)){
+                        possible_lemma = word.slice(0, -3) + "e";
                       } else if ( ((word.charAt(0) == "u" && word.charAt(1) == "n") && !(word.charAt(2) == "d" && word.charAt(3) == "e" && word.charAt(4) == "r")) && !beginUNingExceptions.includes(word)){
                         possible_lemma = word;
                       } else if (oringBackExceptions.includes(word) || len(word, -6) == "e" && len(word,-5) == "a" && len(word, -4) == "s" || (len(word, -6) == "a" && len(word,-5) == "i" && len(word, -4) == "s") || (len(word,-5) == "y" && len(word, -4) == "p") || (len(word,-5) == "r" && len(word, -4) == "c") || (len(word,-5) == "p" && len(word, -4) == "s" || word == "challenging" || word=="aging" || ((len(word, -5) == "n" && len(word, -4) == "g") && (lastx(word, 8) == "changing" || lastx(word, 6) == "ranging" || lastx(word, 5) == "inging" )))){
                         possible_lemma = word.slice(0, -3) + "e"; 
                       } else if (word.substr((word.length - 5)) == "thing") {
                           possible_lemma = word; 
-                        } else if (word == "adding" || word == "asking" || word == "allowing" || word == "aiming" || word == "developing" || word == "waxing" || word == "focusing" || word =="freeing" || word =="unveiling" || word =="veiling" || len(word, -6) == "e" && len(word, -5) == "a" || len(word, -6) == "o" && len(word, -5) == "a" || len(word, -4) == "x" || (len(word, -5) == "e" && len(word, -4) == "n")) {
+                        } else if ( len(word, -6) == "e" && len(word, -5) == "a" || len(word, -6) == "o" && len(word, -5) == "a" || len(word, -4) == "x" || (len(word, -5) == "e" && len(word, -4) == "n")) {
                             possible_lemma = word.slice(0, -3);
-                        } else if (word == "adhering" || word == "citing" || word == "continuing" || word == "eying" || word == "using" || word == "sharing" || word == "tiring" || word == "owing" || (len(word, 4) == "c" && len(word, 5) == "r")){
+                        } else if ( (len(word, 4) == "c" && len(word, 5) == "r")){
                             possible_lemma = word.slice(0, -3) + "e";
                         } else if (len(word, -4) == "y" || (len(word, -4) == "e" && len(word, -5) == "e")) {
                             possible_lemma = word.slice(0, -3);
                         } else if (len(word, -4) == "l" && len(word, -5) == "i" && len(word, -6) == "a"){
                             possible_lemma = word.slice(0, -3);
                         } else if (vowel.includes(len(word, -5)) && len(word, -4) =="n") {
-                            if (word == "opening" || word == "reopening" || word == "reasoning") {
-                              possible_lemma = word.slice(0, -3);
-                            } else if (!vowel.includes(len(word, -6))){
+                            if (!vowel.includes(len(word, -6))){
                               possible_lemma = word.slice(0, -3) + "e";
                             } else {
                               possible_lemma = word.slice(0, -3);
@@ -1661,7 +1667,7 @@ function Lemmatize(text){
                         } else if (vowel.includes(len(word, -5) && len(word, -5) == len(word, -6))) {
                                 possible_lemma = word.slice(0, -3);
                         } else if (len(word, -5) == len(word, -4)) {
-                          if (len(word, -5) == "s" || len(word, -5) == "l" || word == "erring") {
+                          if (len(word, -5) == "s" || len(word, -5) == "l") {
                             if (llBack2to1.includes(word.slice(0, -4))){
                                 possible_lemma = word.slice(0, -4);
                               } else {
@@ -1674,7 +1680,7 @@ function Lemmatize(text){
                             if (vowel.includes(len(word, -5))) {
                                if (len(word, -6) == len(word, -5) || (len(word, -4) == "r" && vowel.includes(len(word, -6)) )){
                                   possible_lemma = word.slice(0, -3);
-                                } else if ((len(word, -5) == "e" && len(word, -6) == "i") || (len(word, -4) == "r" && len(word, -5) == "u") || word == "exciting"){
+                                } else if ((len(word, -5) == "e" && len(word, -6) == "i") || (len(word, -4) == "r" && len(word, -5) == "u") ){
                                   possible_lemma = word.slice(0, -3) + "e";
                                 } else if ((len(word, -4) == "t" && (len(word, -5) == "i" || len(word, -5) == "e"))){
                                   possible_lemma = word.slice(0, -3);
