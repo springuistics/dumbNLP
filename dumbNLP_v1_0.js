@@ -1492,9 +1492,10 @@ function Lemmatize(text){
         }
         //lemmatize words with various common endings
         else if (word.endsWith('es')) {
+          const backScut1Words = ['axes','cuties','genies','movies','shoes','stereotypes','types'];
                     if (endsExceptions.includes(word)){
                       possible_lemma = word;
-                    } else if (word == "movies" || word == "cuties" || word == "genies" || word == "types" || word == "shoes" || word == "axes" || (len(word, -3) == "e" && len(word, -2) == "e")){
+                    } else if (backScut1Words.includes(word) || (len(word, -3) == "e" && len(word, -2) == "e")){
                       possible_lemma = word.slice(0, -1);
                     } else if (len(word, -3) == "i") {
                       possible_lemma = word.slice(0, -3) + "y";
