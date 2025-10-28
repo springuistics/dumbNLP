@@ -521,6 +521,13 @@ const irregular_verbs = [
       "continuous": "pleading"
     },
     {
+      "lemma": "rebuild",
+      "SVA": "rebuilds",
+      "past": "rebuilt",
+      "participle": "rebuilt",
+      "continuous": "rebuilding"
+    },
+    {
       "lemma": "rewrite",
       "SVA": "rewrites",
       "past": "rewrote",
@@ -1585,7 +1592,9 @@ function Lemmatize(text){
                         } else if (len(word, -3) == "e") {
                             possible_lemma = word.slice(0,-1);
                         } else if (vowel.includes(len(word, -4)) && len(word, -3) =="n") {
-                            if (!vowel.includes(len(word, -5))){
+                            if (!vowel.includes(len(word, -5)) && !vowel.includes(len(word, -6))){
+                              possible_lemma = word.slice(0, -2);
+                            } else if (!vowel.includes(len(word, -5))){
                               possible_lemma = word.slice(0, -1);
                             } else {
                               possible_lemma = word.slice(0, -2);
@@ -1660,7 +1669,9 @@ function Lemmatize(text){
                         } else if (len(word, -4) == "l" && len(word, -5) == "i" && len(word, -6) == "a"){
                             possible_lemma = word.slice(0, -3);
                         } else if (vowel.includes(len(word, -5)) && len(word, -4) =="n") {
-                            if (!vowel.includes(len(word, -6))){
+                            if (!vowel.includes(len(word, -6)) && !vowel.includes(len(word, -7))){
+                              possible_lemma = word.slice(0, -3);
+                            } else if (!vowel.includes(len(word, -6))){
                               possible_lemma = word.slice(0, -3) + "e";
                             } else {
                               possible_lemma = word.slice(0, -3);
