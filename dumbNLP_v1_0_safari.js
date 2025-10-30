@@ -1376,7 +1376,7 @@ const beginUNedExceptions = ['unarmed','unboxed','unblocked','unburdened','unbli
 const beginUNingExceptions = ['unarming','unboxing','unblocking','unburdening','unblindfolding','unbolting','uncoiling','unchaining','uncovering','uncocking','unclinching','uncorking','unclasping','unclotheing','uclipping','uncapping','unciphering','unclinging','uncurling','uncoupling','uncrossing','uncluttering','uncowling','uncrowning','unclenching','unclogging','uncloaking','uncasing','uncaging','undressing','undulating','unearthing','unencumbering','unfitting','unfastening','unfriending','unfeudalizeing','unteathering','unfurling','unfettering','unfolding','unforming','unfixing','unfiling','ungluing','unglazing','unhooking','unhitching','unhooding','unhumanizing','unhealing','unhinging','unifiing','unifionizing','univeralising','univeralizing','uniformizing','uniting','unitarianizing','unitizing','uniforming','uniformising','unjoining','unknoting','unkenneling','unleashing','unloading','unloosing','unlinking','unlocking','unloosening','unlimbering','unlaying','unlearning','unlatching','unmolding','unmantling','unmuffling','unmasking','unmuzzling','unnesting','unnaturalizeing','unpinning','unpacking','unplugging','unpegging','unenrolling','unreeling','unroofing','unraveling','unroosting','unrobing','unsealing','unscrewing','unseating','unsaddleing','unstrapping','unsettling','unsheathing','unsteadiing','unsoldering','unspelling','unshackling','unsealing','unsocketing','untiing','untangling','unentwining','untucking','unthroning','unturning','unveiling','unwrapping','unwiring','unwrinkling','unzipping'];
 
 //Helps to clean a string
-function cleanString(input) {
+const cleanString = function(input) {
   var output = "";
   for (var i=0; i<input.length; i++) {
       if (input.charCodeAt(i) <= 127) {
@@ -1387,7 +1387,7 @@ function cleanString(input) {
 }
 
 //Provides lemmas from a text. Returns an array of lemmas, or a single word if only a single word is passed into the function.
-function Lemmatize(text){
+const Lemmatize = function(text){
     //Double check that there are no erronious spaces etc
     let temp1 = text.toLowerCase();
     let temp2 = temp1.replace(/[#"!$%\^&\*;:?{}=\_`~()]/gm,"");
@@ -1733,14 +1733,14 @@ function Lemmatize(text){
 }
 
 //Oldie but goodie
-function safeDivision(x,y){
+const safeDivision = function(x,y){
     if (y==0){
         return 0;
     } else {return (x/y);}
 }
 
 //Takes a string, provides word count
-function CountWords(text){
+const CountWords = function(text){
     let temp1 = text.toLowerCase();
     let temp2 = temp1.replace(/[.,\/#!$%\^&\*;:?{}=\_`~()]/g,"");
     temp2 = temp2.replace(/(\r\n|\n|\r)/g, "");
@@ -1756,7 +1756,7 @@ function CountWords(text){
 }
 
 //Takes a string, provides a sentence count based on punctuation and line breaks
-function CountSentences(text){
+const CountSentences = function(text){
     let check= text.split(/[.?!|\r\n/\\]+/);
     if (check[check.length - 1]==""){
         check.pop();
@@ -1765,7 +1765,7 @@ function CountSentences(text){
 }
 
 //Takes a string and provides the mean length of sentences.
-function CalculateMLS(text){
+const CalculateMLS = function(text){
     let sentences = ProvideSentences(text);
     let wordCount = 0;
     for (let i=0; i<sentences.length; i++){
@@ -1775,7 +1775,7 @@ function CalculateMLS(text){
 }
 
 //Takes a string, provides array of clean words (no punctuation) and capitalization removed
-function ProvideWords(text){
+const ProvideWords = function (text){
     let first = text.toLowerCase();
     let temp1 = first.replace(/[.,\/#!$%\^&\*;:?{}=\-_`~()]/g,"");
     let temp2 = temp1.replace(/\s{2,}/g," ");
@@ -1789,7 +1789,7 @@ function ProvideWords(text){
 }
 
 //Takes a string, provides array of words with attached punctuation; capitalization as is
-function ProvideWordsWithPunctuation(text){
+const ProvideWordsWithPunctuation = function(text){
     let words = text.split(" ");
     for (let i=0; i<words.length; i++){
         if (words[i] == ""){
@@ -1800,7 +1800,7 @@ function ProvideWordsWithPunctuation(text){
 }
 
 //Takes a number (for n) and a string, provides an array of n-grams
-function ProvideNgrams(number, text){
+const ProvideNgrams = function (number, text){
     let array = ProvideWords(text);
     let noWords = array.length;
     let grams = [];
@@ -1820,7 +1820,7 @@ function ProvideNgrams(number, text){
 }
 
 //Takes a string, provides an array of sentences as is;
-function ProvideSentences(text){
+const ProvideSentences = function(text){
   let cleaned = text.replace(/(\r\n|\n|\r)/g, ". "); // Replace line breaks with periods and spaces
   // List of abbreviations that should not trigger a split
   const abbreviations = ["Mr.", "mr.", "Mrs.", "mrs.", "Ms.", "ms.", "Dr.", "dr.", "Prof.", "prof.", "Sr.", "sr.", "St.", "st."];
@@ -1861,7 +1861,7 @@ function ProvideSentences(text){
 
 //Takes a number (n) which represents the n-grams to be compared, then a string (written text) and a second string (scoure text). 
 //Returns a percentage copied by n-gram and an index of the copied words that can be matched to an array of words
-function CompareWritingToSource(n, writing, source){
+const CompareWritingToSource = function (n, writing, source){
     let writingArray = ProvideNgrams(n, writing);
     let sourceArray = ProvideNgrams(n, source);
     let counter = 0;
@@ -1888,7 +1888,7 @@ function CompareWritingToSource(n, writing, source){
 
 //Takes a pre-processed array of writing and a pre-processed array of keywords. 
 //Provides a count of all keywords and a map of counts of each. Use X.keycounts.get("keyword") method to retrieve. Use "for (let [key, value] of X.keycounts)" to itterate
-function CheckForKeywordsPreprocessed(writing, keywords){
+const CheckForKeywordsPreprocessed = function(writing, keywords){
     let counter = 0;
     let indexes = [];
     let individualCounts = new Map([    ]);
@@ -1913,7 +1913,7 @@ function CheckForKeywordsPreprocessed(writing, keywords){
 //Also provides an array of indexes for where each begins, and an array of lengths that tells the length of each phrase (in number of words)
 //Index and length can be used to pinpoint where phrases begin and end in main program
 //For keywords and phrases of 3 and longer, you can use a star * to represent "any word" and it will match; e.g. keyword "get * up" will match "get it up" and "get them up"
-function CheckForKeywordsAndPhrasesPreprocessed(writing, keywords){
+const CheckForKeywordsAndPhrasesPreprocessed = function(writing, keywords){
     let counter = 0;
     let indexes = [];
     let lengths = [];
@@ -2059,7 +2059,7 @@ function CheckForKeywordsAndPhrasesPreprocessed(writing, keywords){
 
 //Takes a pre-processed array of writing. Recommend using lemmatize to create word lists.
 //Provides a count of different words and a map of all different words and the counts of each. Use X.DWCounts.get("word") to retrieve. Use "for (let [key, value] of X.DWcounts)" to itterate
-function DifferentWordsPreprocessed(array){
+const DifferentWordsPreprocessed = function(array){
     let counter = 0;
     let DWlist = [];
     for (let i=0; i<array.length; i++){
@@ -2080,12 +2080,12 @@ function DifferentWordsPreprocessed(array){
 }
 
 //Takes a pre-processed array of writing. Removes all function words (pronouns, prepositions, articles) - useful for types of text density / TTR ratios.
-function RemoveFunctionWords(inputArray){
+const RemoveFunctionWords = function(inputArray){
   return inputArray.filter(word => !FunctionWords.includes(word));
 }
 
 //Takes true / false (true = remove function words, false = do not remove them) and a pre-processed (already lemmatized) array of writing. Calculates CTTR.
-function CalculateCTTRfromArray(remove, array){
+const CalculateCTTRfromArray = function(remove, array){
     let tempArray = [];
     for (let i=0; i<array.length; i++){
       tempArray.push(array[i]);
@@ -2098,7 +2098,7 @@ function CalculateCTTRfromArray(remove, array){
 }
 
 //Takes true / false (true = remove function words, false = do not remove them) and an unprocessed text (writing). Calculates CTTR.
-function CalculateCTTRfromText(remove, text){
+const CalculateCTTRfromText = function(remove, text){
     let theLemmas = Lemmatize(text);
     if (remove == true) {
         RemoveFunctionWords(theLemmas);
@@ -2108,7 +2108,7 @@ function CalculateCTTRfromText(remove, text){
 }
 
 //Takes a text and creates an array of original words with an index that will match lemmatization (i.e. breaks up the contractions)
-function MakeMatchingArrayforLemmatization(text){
+const MakeMatchingArrayforLemmatization = function(text){
   let results = [];
     let array = ProvideWordsWithPunctuation(text);
     array.forEach(function(word){
@@ -2144,7 +2144,7 @@ function MakeMatchingArrayforLemmatization(text){
 }
 
 //Counts syllables
-function syllableCount(word) {
+const syllableCount = function(word) {
   let exceptions = ["the", "be", "me", "she", "we"];
   if (exceptions.includes(word)){
       return 1;
@@ -2168,7 +2168,7 @@ function syllableCount(word) {
   }
 }
 
-function countSyllablesArray(array){
+const countSyllablesArray = function(array){
   let sylCount = 0;
   for (let i=0; i<array.length; i++){
     sylCount += syllableCount(array[i])
@@ -2176,7 +2176,7 @@ function countSyllablesArray(array){
   return sylCount;
 }
 
-function FleschKincaid(text){
+const FleschKincaid = function(text){
   let sent = CountSentences(text);
   let words = CountWords(text);
   let allWords = ProvideWords(text);
@@ -2186,7 +2186,7 @@ function FleschKincaid(text){
   return {"RE" : ReadingEase, "GL": GradeLevel}
 }
 
-function convertNumbertoWord(tempString){
+const convertNumbertoWord = function(tempString){
   let num = parseInt(tempString);
   let db = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
   let db2 = ["twenty", "thirty", "fourty", "fifty", "sixty", "seventy", "eighty", "ninety"];
@@ -2262,7 +2262,7 @@ function convertNumbertoWord(tempString){
 }
 
 //Completely sanitizes a text to get rid of line breaks and non unicode characters
-function sanitizeText(firstText){
+const sanitizeText = function(firstText){
   //remove Japanese characters
   firstText = firstText.replace(/[０-９]|[－]/g,
       function(tmpStr) {
@@ -2279,13 +2279,13 @@ function sanitizeText(firstText){
 }
 
 //Takes string of elementID and uses that to grab the "value" property (for inputs and text areas) and then returns sanitzed text.
-function grabCleanText(elementID){
+const grabCleanText = function(elementID){
   let thisText = document.getElementById(elementID).value;
   return sanitizeText(thisText);
 }
 
 //Requires loading the ngsl.js first. This one takes an array of pre-lematized words.
-function NGSLPercentage(array){
+const NGSLPercentage = function(array){
   let thisNoW = array.length;
   let thisNGSL = 0;
   array.forEach(function(word){
@@ -2297,7 +2297,7 @@ function NGSLPercentage(array){
 }
 
 //Takes an array of pre-lematized words. Runs a check of repeated words/phrases that are suspicious
-function bullshitRepetition(array){
+const bullshitRepetition = function(array){
   let numboWords = array.length;
   let oneWordrepeatIndex = [];
   let twoWordrepeatIndex = [];
@@ -2339,7 +2339,7 @@ function bullshitRepetition(array){
 }
 
 //Takes a pre-lemmatized array and checks for nonsense by using the NGSL and bullshitRepetion functions. Returns true if nonsense is detected, otherwise, false.
-function checkForNonsense(array){
+const checkForNonsense = function(array){
   let thisBS = bullshitRepetition(array);
   let thisNGSL = NGSLPercentage(array);
   if (thisNGSL < 0.6 || thisBS > 0.3){
@@ -2350,7 +2350,7 @@ function checkForNonsense(array){
 }
 
 //Requires loading the cefrJ.js first. This one takes an array of pre-lematized words.
-function cefrJpercentage(array){
+const cefrJpercentage = function(array){
   let thisNoW = array.length;
   let thisA1 = 0;
   let thisA2 = 0;
