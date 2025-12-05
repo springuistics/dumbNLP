@@ -1592,7 +1592,7 @@ function Lemmatize(text){
                         } else if (len(word, -3) == "e") {
                             possible_lemma = word.slice(0,-1);
                         } else if (vowel.includes(len(word, -4)) && len(word, -3) =="n") {
-                            if (!vowel.includes(len(word, -5)) && !vowel.includes(len(word, -6))){
+                            if (!vowel.includes(len(word, -5)) && !vowel.includes(len(word, -6)) && len(word,-6)!=='r'){
                               possible_lemma = word.slice(0, -2);
                             } else if (!vowel.includes(len(word, -5))){
                               possible_lemma = word.slice(0, -1);
@@ -1628,7 +1628,7 @@ function Lemmatize(text){
                               possible_lemma = word.slice(0, -2);
                             }
                         } else if (!vowel.includes(len(word, -3)) && vowel.includes(len(word, -4))) {
-                          const lowerEdvcExceptions = ["acquired", "excited", "invited", "persuaded", "quoted", "required"];
+                          const lowerEdvcExceptions = ["acquired", "completed", "excited", "invited", "persuaded", "quoted", "required"];
                             if (lowerEdvcExceptions.includes(word)){
                               possible_lemma = word.slice(0, -1);
                             } else if (len(word, -3) == "r" && len(word, -4) == "e" && len(word, -5) == len(word, -6) ){
@@ -1644,7 +1644,7 @@ function Lemmatize(text){
                             }
                         } else {possible_lemma = word;}
         }  else if (word.endsWith('ing')) {
-          let oringBackExceptions = ['acquiring', 'creating', 'convening', 'recreating', 'persuading', 'boring', 'requiring', 'quoting', 'inspiring', 'assuming', 'poring', 'goring', 'coring', 'scoring', 'adoring', 'snoring', 'choring', 'whoring', 'storing', 'ignoring', 'encoring', 'restoring', 'exploring', 'imploring', 'outscoring', 'deploring', 'underscoring', 'unrestoring'];
+          let oringBackExceptions = ['acquiring', 'completing', 'creating', 'convening', 'recreating', 'persuading', 'boring', 'requiring', 'quoting', 'inspiring', 'assuming', 'poring', 'goring', 'coring', 'scoring', 'adoring', 'snoring', 'choring', 'whoring', 'storing', 'ignoring', 'encoring', 'restoring', 'exploring', 'imploring', 'outscoring', 'deploring', 'underscoring', 'unrestoring'];
           let leaveAloneExceptions = ['boing', 'bring', 'ceiling', 'during', 'evening', 'king', 'morning', 'ongoing', 'outing', 'outgoing', 'offspring', 'outstanding', 'ring', 'sing', 'sling', 'spring', 'handspring', 'wellspring', 'sting', 'string', 'hamstring', 'drawstring', 'heartstring', 'shoestring', 'swing','thing', 'well-being', 'wing', 'wring']
           const ingTocutExceptions = ['adding', 'asking', 'allowing', 'aiming', 'developing', 'erring','focusing','freezing', 'opening', 'reopening', 'reasoning','unveiling','veiling','waxing'];
           const ingToaddEExceptions = ['adhering', 'citing', 'continuing', 'exciting', 'eying', 'inviting','owing', 'sharing','tiring', 'using'];
@@ -1669,7 +1669,7 @@ function Lemmatize(text){
                         } else if (len(word, -4) == "l" && len(word, -5) == "i" && len(word, -6) == "a"){
                             possible_lemma = word.slice(0, -3);
                         } else if (vowel.includes(len(word, -5)) && len(word, -4) =="n") {
-                            if (!vowel.includes(len(word, -6)) && !vowel.includes(len(word, -7))){
+                            if (!vowel.includes(len(word, -6)) && !vowel.includes(len(word, -7)) && len(word,-7)!=='r'){
                               possible_lemma = word.slice(0, -3);
                             } else if (!vowel.includes(len(word, -6))){
                               possible_lemma = word.slice(0, -3) + "e";
