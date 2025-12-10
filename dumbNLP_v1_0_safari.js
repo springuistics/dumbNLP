@@ -1352,7 +1352,7 @@ const FunctionWords = [
 ];
 
 //These words end in s but should be left as is, excluding those that end in -us
-const endsExceptions = ['angeles','always', 'as', 'bias','chaos','christmas','downstairs','kansas','los','nowadays','ourselves','pants','series','themselves','upstairs','whereas','yourselves'];
+const endsExceptions = ['angeles','alias','always', 'as', 'bias','chaos','christmas','downstairs','gas','kansas','los','nowadays','ourselves','pants','series','themselves','upstairs','whereas','yourselves'];
 
 //These words that end in -us SHOULD drop the s
 const wordsEndInU = [
