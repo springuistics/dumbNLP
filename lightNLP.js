@@ -308,7 +308,7 @@ const irregular_verbs = [
       "SVA": "gets",
       "past": "got",
       "participle": "got",
-      "continuous": "geting"
+      "continuous": "getting"
     },
     {
       "lemma": "give",
@@ -1396,7 +1396,7 @@ const Lemmatize = function(text){
     temp2 = temp2.replace(/[\r\n/\\]+/gm, " ");
     const hyphenExceptions = ["pre", "non", "re", "co", "semi", "quasi", "post", "pro", "under", "mid", "inter", "pseudo", "anti", "contra", "multi", "ultra"];
     const replaceHyphen = (str) => {
-      return str.replace(/\b([a-z]+(?:-[a-z]+)+)\b/gi, (match) => {
+      return str.replace(/\b([a-z0-9]+(?:-[a-z0-9]+)+)\b/gi, (match) => {
         const parts = match.split("-");
         const first = parts[0].toLowerCase();
 
@@ -1809,37 +1809,158 @@ const Lemmatize = function(text){
                 else if (ingTocutExceptions.has(word)) {
                     possible_lemma = word.slice(0, -3);
                 }
-                // Words where we remove "ing" and add "e"
+                // 3. Words where we remove "ing" and add "e"
                 else if (ingToaddEExceptions.has(word)) {
                     possible_lemma = word.slice(0, -3) + "e";
                 }
-                // Words beginning with "un-" but not "under-"
-                else if (word.startsWith("un") && !word.startsWith("under") && !beginUNingExceptions.has(word)) {
+
+                // 4. Words beginning with "un-" but not "under-"
+                else if (
+                    word.startsWith("un") &&
+                    !word.startsWith("under") &&
+                    !beginUNingExceptions.includes(word)
+                ) {
                     possible_lemma = word;
                 }
-                // ie → ying (dying → die, tying → tie)
-                else if (word.endsWith("ying")) {
-                    possible_lemma = word.slice(0, -4) + "ie";
-                }
-                // Words where the base ends in "e" (making → make)
-                else if (oringBackExceptions.has(word)) {
+
+                // 5. Words where the base ends in "e" (your original oringBack logic)
+                else if (
+                    oringBackExceptions.has(word) ||
+                    (l6 === "e" && l5 === "a" && l4 === "s") ||
+                    (l6 === "a" && l5 === "i" && l4 === "s") ||
+                    (l5 === "y" && l4 === "p") ||
+                    (l5 === "r" && l4 === "c") ||
+                    (l5 === "p" && l4 === "s") ||
+                    word === "challenging" ||
+                    word === "aging" ||
+                    (
+                        l5 === "n" && l4 === "g" &&
+                        (lastx(word, 8) === "changing" ||
+                        lastx(word, 6) === "ranging" ||
+                        lastx(word, 5) === "inging")
+                    )
+                ) {
                     possible_lemma = word.slice(0, -3) + "e";
                 }
-                // Words ending in vowel + vowel + ing (seeing → see)
-                else if (vowel.includes(l4) && vowel.includes(l3)) {
+
+                // 6. Words ending in "thing"
+                else if (word.endsWith("thing")) {
+                    possible_lemma = word;
+                }
+
+                // 7. Words where we remove "ing" (ea, oa, x, en patterns)
+                else if (
+                    (l6 === "e" && l5 === "a") ||
+                    (l6 === "o" && l5 === "a") ||
+                    l4 === "x" ||
+                    (l5 === "e" && l4 === "n")
+                ) {
                     possible_lemma = word.slice(0, -3);
                 }
-                // Words ending in vowel + consonant + ing (planning → plan)
-                else if (vowel.includes(l4) && !vowel.includes(l3)) {
-                    possible_lemma = word.slice(0, -4);
-                }
-                // Words ending in doubled consonant (running → run)
-                else if (l3 === l4 && !vowel.includes(l3)) {
-                    possible_lemma = word.slice(0, -4);
-                }
-                // Default: remove "ing"
-                else {possible_lemma = word.slice(0, -3);}
 
+                // 8. Words ending in "cring" (e.g., "caring")
+                else if (l4 === "c" && l5 === "r") {
+                    possible_lemma = word.slice(0, -3) + "e";
+                }
+
+                // 9. Words ending in "ying" or "eeing"
+                else if (l4 === "y" || (l4 === "e" && l5 === "e")) {
+                    possible_lemma = word.slice(0, -3);
+                }
+
+                // 10. Words ending in "ialing" etc.
+                else if (l4 === "l" && l5 === "i" && l6 === "a") {
+                    possible_lemma = word.slice(0, -3);
+                }
+
+                // 11. Vowel + n + ing patterns
+                else if (vowel.includes(l5) && l4 === "n") {
+                    if (!vowel.includes(l6) && !vowel.includes(l7) && l7 !== "r") {
+                        possible_lemma = word.slice(0, -3);
+                    } else if (!vowel.includes(l6)) {
+                        possible_lemma = word.slice(0, -3) + "e";
+                    } else {
+                        possible_lemma = word.slice(0, -3);
+                    }
+                }
+
+                // 12. er/ el / or / ai patterns
+                else if (
+                    (l4 === "r" && l5 === "e") ||
+                    (l4 === "l" && l5 === "e") ||
+                    (l4 === "r" && l5 === "o") ||
+                    (l6 === "a" && l5 === "i")
+                ) {
+                    possible_lemma = word.slice(0, -3);
+                }
+
+                // 13. Vowel doubling patterns
+                else if (vowel.includes(l5) && l5 === l6) {
+                    possible_lemma = word.slice(0, -3);
+                }
+
+                // 14. Double consonant patterns
+                else if (l5 === l4) {
+                    if (l5 === "s" || l5 === "l") {
+                        if (llBack2to1.has(word.slice(0, -4))) {
+                            possible_lemma = word.slice(0, -4);
+                        } else {
+                            possible_lemma = word.slice(0, -3);
+                        }
+                    } else {
+                        possible_lemma = word.slice(0, -4);
+                    }
+                }
+
+                // 15. Consonant + ing patterns
+                else if (!vowel.includes(l4)) {
+                    if (vowel.includes(l5)) {
+                        if (l6 === l5 || (l4 === "r" && vowel.includes(l6))) {
+                            possible_lemma = word.slice(0, -3);
+                        } else if (
+                            (l5 === "e" && l6 === "i") ||
+                            (l4 === "r" && l5 === "u")
+                        ) {
+                            possible_lemma = word.slice(0, -3) + "e";
+                        } else if (
+                            (l4 === "t" && (l5 === "i" || l5 === "e"))
+                        ) {
+                            possible_lemma = word.slice(0, -3);
+                        } else if (
+                            (vowel.includes(l6) && l5 === l6) ||
+                            (l6 === "u" && !(l5 === "a" && l4 === "t"))
+                        ) {
+                            possible_lemma = word.slice(0, -3) + "e";
+                        } else if (
+                            (l4 === "r" && vowel.includes(l6)) ||
+                            (l4 === "g" && vowel.includes(l6)) ||
+                            (l4 === "d" && vowel.includes(l6)) ||
+                            l4 === "w"
+                        ) {
+                            possible_lemma = word.slice(0, -3);
+                        } else {
+                            possible_lemma = word.slice(0, -3) + "e";
+                        }
+                    } else if (eBackExceptions.has(l5 + l4)) {
+                        possible_lemma = word.slice(0, -3) + "e";
+                    } else if (!vowel.includes(l5)) {
+                        possible_lemma = word.slice(0, -3);
+                    }
+                }
+
+                // 16. Vowel + ing patterns
+                else if (vowel.includes(l4)) {
+                    if (l4 === l5) {
+                        possible_lemma = word.slice(0, -4);
+                    } else {
+                        possible_lemma = word.slice(0, -4) + "e";
+                    }
+                }
+
+                // 17. Fallback
+                else {
+                    possible_lemma = word;
+                }
         } else {
           possible_lemma = word;
         }
@@ -2229,40 +2350,71 @@ const CalculateCTTRfromText = function(remove, text){
 }
 
 //Takes a text and creates an array of original words with an index that will match lemmatization (i.e. breaks up the contractions)
-const MakeMatchingArrayforLemmatization = function(text){
-  let results = [];
-    let array = ProvideWordsWithPunctuation(text);
-    array.forEach(function(word){
-        if (word.toLowerCase() == "i'm") {
-            results.push("I");
-            results.push("am");
-        } else if (word.toLowerCase()=="won't") {
-            results.push("will");
-            results.push("not");
-        } else if (word.substr(word.length - 3) == "'re") {
-            results.push(word.slice(0,-3));
-            results.push("are");
-        } else if (word.substr(word.length - 3) == "n't") {
-            results.push(word.slice(0,-3));
-            results.push("not");
-        } else if (word.substr(word.length - 3) == "'ve") {
-            results.push(word.slice(0,-3));
-            results.push("have");
-        } else if (word.substr(word.length - 3) == "'ll") {
-            results.push(word.slice(0,-3));
-            results.push("will");
-        } else if (word.substr(word.length - 2) == "'d") {
-            results.push(word.slice(0,-2));
-            results.push("would");
-        } else if (word.substr(word.length - 2) == "'s") {
-            if (word.toLowerCase() == "here's" || word.toLowerCase() == "there's" || word.toLowerCase() == "he's" || word.toLowerCase() == "she's" || word.toLowerCase() == "it's" || word.toLowerCase() == "that's" || word.toLowerCase() == "this's") {
-            results.push(word.slice(0,-2));
-            results.push("is");
-            }
-        } else {results.push(word);}
+const MakeMatchingArrayforLemmatization = function(text) {
+  const hyphenExceptions = ["pre", "non", "re", "co", "semi", "quasi", "post", "pro", "under", "mid", "inter", "pseudo", "anti", "contra", "multi", "ultra"];
+  const replaceHyphen = (str) => {
+    return str.replace(/\b([a-z0-9]+(?:-[a-z0-9]+)+)\b/gi, (match) => {
+      const parts = match.split("-");
+      const first = parts[0].toLowerCase();
+      if (hyphenExceptions.includes(first)) {
+        return match; // keep as one token
+      }
+      return parts.join(" "); // split into multiple tokens
     });
-    return array;
-}
+  };
+  // --- apply hyphen splitting to the original text ---
+  let processed = replaceHyphen(text);
+  // --- split into tokens 
+  let originalTokens = processed.split(/\s+/);
+  const aligned = [];
+  originalTokens.forEach(word => {
+      const lower = word.toLowerCase();
+      let expanded = [];
+
+      // --- contraction logic
+      if (lower === "i'm") {
+        expanded = ["i", "am"];
+      } else if (lower === "won't") {
+        expanded = ["will", "not"];
+      } else if (lower.endsWith("'re")) {
+        expanded = [lower.slice(0, -3), "are"];
+      } else if (lower.endsWith("n't")) {
+        if (lower === "can't") {
+          expanded = [lower.slice(0, -2), "not"];
+        } else {
+          expanded = [lower.slice(0, -3), "not"];
+        }
+      } else if (lower.endsWith("'ve")) {
+        expanded = [lower.slice(0, -3), "have"];
+      } else if (lower.endsWith("'ll")) {
+        expanded = [lower.slice(0, -3), "will"];
+      } else if (lower.endsWith("'d")) {
+        expanded = [lower.slice(0, -2), "would"];
+      } else if (lower.endsWith("'s")) {
+        const base = lower.slice(0, -2);
+        const sIndics = ["here","there","he","she","it","that","this","why","how","what","who"]; //pull these for apostraphes
+        if (sIndics.includes(base)) {
+          expanded = [base, "is"];
+        } else if (lower === "let's") {
+          expanded = ["let", "us"];
+        } else {
+          expanded = [base];
+        }
+      } else if (lower.endsWith("'")) {
+        expanded = [lower.slice(0, -1)];
+      } else {
+        expanded = [lower];
+      }
+
+      // --- alignment logic ---
+      aligned.push(word); // first lemma index gets original token
+      for (let i = 1; i < expanded.length; i++) {
+        aligned.push(""); // subsequent lemma indices get empty placeholders
+      }
+    });
+
+  return aligned;
+};
 
 //Counts syllables
 const syllableCount = function(word) {
