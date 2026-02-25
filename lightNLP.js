@@ -1403,6 +1403,7 @@ const Lemmatize = function(text){
     let results = [];
 
     //this simple functoin helps get particular letters
+    function len(word, x) {let a = word.charAt(word.length + x); return a}
     function lastx(word, x) {let a = word.slice(-x); return a}
 
     results1.forEach((word) => {
