@@ -1352,7 +1352,7 @@ const FunctionWords = [
 ];
 
 //These words end in s but should be left as is, excluding those that end in -us
-const endsExceptions = new Set(['angeles','alias','always','as','bias','chaos','christmas','downstairs','gas','kansas','los','nowadays','ourselves','pants','series','themselves','upstairs','whereas','yourselves']);
+const endsExceptions = new Set(['angeles','alias','always','as','bias','chaos','christmas','downstairs','gas','kansas','los','nowadays','ourselves','pants','perhaps','series','themselves','upstairs','whereas','yourselves']);
 
 //These words that end in -us SHOULD drop the s
 const wordsEndInU = new Set([
@@ -1363,7 +1363,7 @@ const wordsEndInU = new Set([
 const endsDExceptions = new Set([
   'bed', 'biped', 'bloodshed', 'breed', 'creed', 'cred', 'crossbreed', 'coed', 'deed', 'deathbed', 'dogsled', 'dead', 'ed', 'fred', 'flowerbed', 'feed', 'ged', 'greed', 'heed', 'hatred', 'hotbed', 'handicapped', 'hundred', 'infared', 'indeed',
   'kindred', 'led', 'leed', 'meed', 'milliped', 'milkweed', 'med', 'naked', 'need', 'nosebleed', 'newlywed', 'ped', 'qed', 'red', 'reed', 'roadbed', 'riverbed', 'shed', 'seed', 'grapeseed', 
-  'multifaceted', 'sled', 'speed', 'steed', 'screed', 'seabed', 'seasoned','seaweed', 'sickbed', 'succeed', 'thoroughbred', 'tweed', 'tumbleweed', 'toolshed', 'watershed', 'woodshed', 'wed', 'weed',
+  'multifaceted', 'reputed','sled', 'speed', 'steed', 'screed', 'seabed', 'seasoned','seaweed', 'sickbed', 'succeed', 'thoroughbred', 'tweed', 'tumbleweed', 'toolshed', 'watershed', 'woodshed', 'wed', 'weed',
   'wicked','crooked','ragged','jagged','dogged','beloved','learned','winged','forked','feathered']);
 
 //These are letters that precede ed/ing that should be removed but an e should be written there
@@ -1376,593 +1376,610 @@ const llBack2to1 = new Set(["dial", "expel", "fuel", "wool", "panel", "lapel", "
 const beginUNedExceptions = new Set(['unarmed','unboxed','unblocked','unburdened','unblindfolded','unbolted','uncoiled','unchained','uncovered','uncocked','unclinched','uncorked','unclasped','unclotheed','uclipped','uncapped','unciphered','unclinged','uncurled','uncoupled','uncrossed','uncluttered','uncowled','uncrowned','unclenched','unclogged','uncloaked','uncased','uncaged','undressed','undulated','unearthed','unencumbered','unfitted','unfastened','unfriended','unfeudalizeed','unteathered','unfurled','unfettered','unfolded','unformed','unfixed','unfiled','unglued','unglazed','unhooked','unhitched','unhooded','unhumanized','unhealed','unhinged','unified','unifionized','univeralised','univeralized','uniformized','united','unitarianized','unitized','uniformed','uniformised','unjoined','unknoted','unkenneled','unleashed','unloaded','unloosed','unlinked','unlocked','unloosened','unlimbered','unlayed','unlearned','unlatched','unmolded','unmantled','unmuffled','unmasked','unmuzzled','unnested','unnaturalizeed','unpinned','unpacked','unplugged','unpegged','unenrolled','unreeled','unroofed','unraveled','unroosted','unrobed','unsealed','unscrewed','unseated','unsaddleed','unstrapped','unsettled','unsheathed','unsteadied','unsoldered','unspelled','unshackled','unsealed','unsocketed','untied','untangled','unentwined','untucked','unthroned','unturned','unveiled','unwrapped','unwired','unwrinkled','unzipped']);
 const beginUNingExceptions = new Set(['unarming','unboxing','unblocking','unburdening','unblindfolding','unbolting','uncoiling','unchaining','uncovering','uncocking','unclinching','uncorking','unclasping','unclotheing','uclipping','uncapping','unciphering','unclinging','uncurling','uncoupling','uncrossing','uncluttering','uncowling','uncrowning','unclenching','unclogging','uncloaking','uncasing','uncaging','undressing','undulating','unearthing','unencumbering','unfitting','unfastening','unfriending','unfeudalizeing','unteathering','unfurling','unfettering','unfolding','unforming','unfixing','unfiling','ungluing','unglazing','unhooking','unhitching','unhooding','unhumanizing','unhealing','unhinging','unifiing','unifionizing','univeralising','univeralizing','uniformizing','uniting','unitarianizing','unitizing','uniforming','uniformising','unjoining','unknoting','unkenneling','unleashing','unloading','unloosing','unlinking','unlocking','unloosening','unlimbering','unlaying','unlearning','unlatching','unmolding','unmantling','unmuffling','unmasking','unmuzzling','unnesting','unnaturalizeing','unpinning','unpacking','unplugging','unpegging','unenrolling','unreeling','unroofing','unraveling','unroosting','unrobing','unsealing','unscrewing','unseating','unsaddleing','unstrapping','unsettling','unsheathing','unsteadiing','unsoldering','unspelling','unshackling','unsealing','unsocketing','untiing','untangling','unentwining','untucking','unthroning','unturning','unveiling','unwrapping','unwiring','unwrinkling','unzipping']);
 
-//Helps to clean a string
-const cleanString = function(input) {
-  var output = "";
-  for (var i=0; i<input.length; i++) {
-      if (input.charCodeAt(i) <= 127) {
-          output += input.charAt(i);
-      }
-  }
-  return output;
-}
-
 //Provides lemmas from a text. Returns an array of lemmas, or a single word if only a single word is passed into the function.
 const Lemmatize = function(text){
-    //Double check that there are no erronious spaces etc
-    let temp1 = text.toLowerCase();
-    let temp2 = temp1.replace(/[#"!$%\^&\*;:?{}=\_`~()]/gm,"");
-    temp2 = temp2.replace(/[\u2014\u2013]/gm, " ");
-    temp2 = temp2.replace(/[\r\n/\\]+/gm, " ");
-    const hyphenExceptions = ["pre", "non", "re", "co", "semi", "quasi", "post", "pro", "under", "mid", "inter", "pseudo", "anti", "contra", "multi", "ultra"];
-    const replaceHyphen = (str) => {
-      return str.replace(/\b([a-z0-9]+(?:-[a-z0-9]+)+)\b/gi, (match) => {
-        const parts = match.split("-");
-        const first = parts[0].toLowerCase();
+    // Normalize and clean text
+    let cleaned = text
+      .toLowerCase()
+      // remove punctuation except hyphens and apotraphes
+      .replace(/[#"!$%\^&\*;:?{}=\_`~()]/g, "")
+      // convert em/en dashes to spaces
+      .replace(/[\u2014\u2013]/g, " ")
+      // normalize slashes, newlines, backslashes to spaces
+      .replace(/[\r\n/\\]+/g, " ");
 
-        // If the first part is an exception, keep the whole word
-        if (hyphenExceptions.includes(first)) {
-          return match;
-        }
+    // Hyphen exceptions
+    const hyphenExceptions = new Set(["pre", "non", "re", "co", "semi", "quasi", "post", "pro","under", "mid", "inter", "pseudo", "anti", "contra", "multi", "ultra"]);
+    // Split hyphenated words unless first part is an exception
+    cleaned = cleaned.replace(/\b([a-z0-9]+(?:-[a-z0-9]+)+)\b/gi, (match) => {
+      const parts = match.split("-");
+      return hyphenExceptions.has(parts[0].toLowerCase())
+        ? match
+        : parts.join(" ");
+    });
 
-        // Otherwise split into separate words
-        return parts.join(" ");
-      });
-    };
-    let temp3 = replaceHyphen(temp2);
-    let temp4 = temp3.replace(/\s\s+/g, ' ');
-    let results1 = temp4.split(" ");
+    // Collapse extra spaces and split
+    const results1 = cleaned.trim().replace(/\s+/g, " ").split(" ");
     let results = [];
 
     //this simple functoin helps get particular letters
-    function len(word, x) {let a = word.charAt(word.length + x); return a}
     function lastx(word, x) {let a = word.slice(-x); return a}
 
-    results1.forEach(function(word){
-      let numberTest = /^\d*[\.,\/]?\d+$/.test(word);
-      if (numberTest==true){
+    results1.forEach((word) => {
+      // Number detection
+      if (/^\d*[\.,\/]?\d+$/.test(word)) {
         results.push(word);
-      } else{
-        word = word.replace(/[\.,\/]/g, "");
-        //splits up contractions into words
-        if (word == "i'm") {
-            results.push("i");
-            results.push("am");
-        } else if (word=="won't") {
-            results.push("will");
-            results.push("not");
-        } else if (word.substr(word.length - 3) == "'re") {
-            results.push(word.slice(0,-3));
-            results.push("are");
-        } else if (word.substr(word.length - 3) == "n't") {
-            if (word == "can't"){
-              results.push(word.slice(0,-2));
-              results.push("not");
-            } else {
-              results.push(word.slice(0,-3));
-              results.push("not");
-            }
-        } else if (word.substr(word.length - 3) == "'ve") {
-            results.push(word.slice(0,-3));
-            results.push("have");
-        } else if (word.substr(word.length - 3) == "'ll") {
-            results.push(word.slice(0,-3));
-            results.push("will");
-        } else if (word.substr(word.length - 2) == "'d") {
-            results.push(word.slice(0,-2));
-            results.push("would");
-        } else if (word.substr(word.length - 2) == "'s") {
-          let tempLeft = word.slice(0, -2);
-          let sIndics = ["here", "there", "he", "she", "it", "that", "this", "why", "how", "what", "who"];
-          if (sIndics.includes(tempLeft)) {
-          results.push(word.slice(0,-2));
-          results.push("is");
-          } else if (word == "let's"){
-            results.push(word.slice(0,-2));
-            results.push("us");
-          } else {results.push(word.slice(0,-2));}
-        } else if (word.substr(word.length -1) == "'"){
-            results.push(word.slice(0, -1));
-        } else {results.push(word);}
+        return;
       }
+      // Remove punctuation inside words
+      word = word.replace(/[\.,\/]/g, "");
+      const lower = word.toLowerCase();
+      // Direct contraction dictionary
+      const contractions = {
+        "i'm": ["i", "am"],
+        "won't": ["will", "not"],
+        "can't": ["can", "not"],
+        "let's": ["let", "us"]
+      };
+      if (contractions[lower]) {
+        results.push(...contractions[lower]);
+        return;
+      }
+      // Generic endings (IE-safe)
+      if (lower.slice(-3) === "'re") {
+        results.push(word.slice(0, -3), "are");
+        return;
+      }
+      if (lower.slice(-3) === "n't") {
+        results.push(word.slice(0, -3), "not");
+        return;
+      }
+      if (lower.slice(-3) === "'ve") {
+        results.push(word.slice(0, -3), "have");
+        return;
+      }
+      if (lower.slice(-3) === "'ll") {
+        results.push(word.slice(0, -3), "will");
+        return;
+      }
+      if (lower.slice(-2) === "'d") {
+        results.push(word.slice(0, -2), "would");
+        return;
+      }
+      if (lower.slice(-2) === "'s") {
+        const base = word.slice(0, -2);
+        const sIndics = new Set([
+          "here", "there", "he", "she", "it", "that", "this",
+          "why", "how", "what", "who"
+        ]);
+        if (sIndics.has(base)) {
+          results.push(base, "is");
+        } else {
+          results.push(base);
+        }
+        return;
+      }
+      if (lower.slice(-1) === "'") {
+        results.push(word.slice(0, -1));
+        return;
+      }
+      results.push(word);
     });
     let diff_words = [];
     results.forEach(function(word){
-        //over-simplified attempt at lemmatizing
-        var possible_lemma = "";
-        const vowel = "aeiou";
-        function len(word, x) {let a = word.charAt(word.length + x); return a}
-        //lemmatize common irregular verbs
-        function irreg(word) {
-            for(let i = 0; i < irregular_verbs.length; i++) {
-                if (word == irregular_verbs[i].SVA) {
-                    possible_lemma = irregular_verbs[i].lemma;
-                } else if (word == irregular_verbs[i].lemma) {
-                    possible_lemma = irregular_verbs[i].lemma;
-                } else if (word == irregular_verbs[i].past ){
-                    possible_lemma = irregular_verbs[i].lemma;
-                } else if (word == irregular_verbs[i].continuous){
-                    possible_lemma = irregular_verbs[i].lemma;
-                } else if (word == irregular_verbs[i].participle){
-                    possible_lemma = irregular_verbs[i].lemma;
-                }
-              }
-            return possible_lemma           
-          }
-            
-        //lemmatize common irregular plurals
-        function irregPlural(word){
-            let lemma = "";
-            for(let i=0; i < irregular_plurals.length; i++){
-                if (word == irregular_plurals[i].weirdo){
-                    lemma = irregular_plurals[i].base;
-                }
-            }
-            return lemma;
-        }
-        //lemmatize be verbs
-        if (word == "be" || word == "is" || word == "are" || word == "am" || word == "was" || word == "were" || word == "being" || word == "been") {
-            possible_lemma = "be";
-        } else if (irregPlural(word) !== "") {
-          possible_lemma = irregPlural(word);
-        } else if (irreg(word) !== ""){
-          possible_lemma = irreg(word);
-        }
-        //lemmatize words with various common endings
-        else if (word.endsWith("oes") && !["shoes", "does", "goes"].includes(word)) {
-            possible_lemma = word.slice(0, -2); // remove "es"
-        }
-        else if (word.endsWith('es')) {
-          const backScut1Words = new Set(['axes','cuties','genies','movies','shoes','stereotypes','types','aches','backaches','headaches','stomachaches']);
-          const specialEsWords = new Set(["focuses","campuses","sinuses","choruses","fetuses","omnibuses","impetuses","pluses","minuses","buses","lotuses","viruses","mucuses","caucuses","cactuses","statuses","biases"]);
-          const last1 = len(word, -1);
-          const last2 = len(word, -2);
-          const last3 = len(word, -3);
-          const last4 = len(word, -4);
-          const last5 = len(word, -5);
-          if (endsExceptions.has(word)) {
-                  possible_lemma = word;
-              }
-              // words like "movies", "shoes", "cuties"
-              else if (backScut1Words.has(word) || (last3 === "e" && last2 === "e")) {
-                  possible_lemma = word.slice(0, -1);
-              }
-              // babies → baby
-              else if (last3 === "i") {
-                  possible_lemma = word.slice(0, -3) + "y";
-              }
-              // vowel + es
-              else if (vowel.includes(last3)) {
-                  if (last3 === "u") {
-                      possible_lemma = word.slice(0, -1);
-                  } else {
-                      possible_lemma = word.slice(0, -2);
-                  }
-              }
-              // consonant + es
-              else {
-                  // ss, ch, sh, ia + l, x
+      let possible_lemma = "";
+
+          // --- 1. Irregular verb lookup (fast) ---
+          function irreg(word) {
+              for (let i = 0; i < irregular_verbs.length; i++) {
+                  const v = irregular_verbs[i];
                   if (
-                      (last3 === "s" && last4 === "s") ||
-                      (last3 === "h" && last4 === "c") ||
-                      (last3 === "h" && last4 === "s") ||
-                      (last3 === "l" && last4 === "i" && last5 === "a") ||
-                      (last3 === "x")
+                      word === v.SVA ||
+                      word === v.lemma ||
+                      word === v.past ||
+                      word === v.continuous ||
+                      word === v.participle
                   ) {
-                      possible_lemma = word.slice(0, -2);
-                  }
-
-                  // exceptions like "theses" → "these" (your eBackExceptions)
-                  else if (eBackExceptions.has(last4 + last3)) {
-                      possible_lemma = word.slice(0, -1);
-                  }
-
-                  // special -uses words
-                  else if (specialEsWords.has(word)) {
-                      possible_lemma = word.slice(0, -2);
-                  }
-
-                  // double letter before -es (e.g., "buzzes" → "buzz")
-                  else if (last3 === last4) {
-                      possible_lemma = word.slice(0, -3);
-                  }
-
-                  // vowel before consonant + es (e.g., "rises", "poses")
-                  else if (
-                      vowel.includes(last4) ||
-                      (last3 === "s" && last4 === "r") ||
-                      (last3 === "s" && last4 === "p")
-                  ) {
-                      possible_lemma = word.slice(0, -1);
-                  }
-
-                  else {
-                      possible_lemma = word;
+                      return v.lemma;
                   }
               }
-        } else if (word.endsWith("s")) {
-              const last1 = len(word, -1);
-              const last2 = len(word, -2);
+              return "";
+          }
 
-              // 1. Words ending in -us → sometimes plural, sometimes not
-              if (last2 === "u") {
-                  if (wordsEndInU.has(word)) {
-                      possible_lemma = word.slice(0, -1);   // remove final s
-                  } else {
-                      possible_lemma = word;                // leave unchanged
+          // --- 2. Irregular plural lookup ---
+          function irregPlural(word) {
+              for (let i = 0; i < irregular_plurals.length; i++) {
+                  if (word === irregular_plurals[i].weirdo) {
+                      return irregular_plurals[i].base;
                   }
               }
-              // 2. Words that should never be lemmatized
-              else if (endsExceptions.has(word)) {
-                  possible_lemma = word;
-              }
-              // 3. Words ending in ss → not plural (e.g., "boss", "glass")
-              else if (last2 === "s") {
-                  possible_lemma = word;
-              }
-              // 4. Words ending in 's (possessives)
-              else if (last2 === "'") {
-                  possible_lemma = word;
-              }
-              // 5. Words ending in -is (not plural)
-              else if (last2 === "i") {
-                  possible_lemma = word;
-              }
-              // 6. Default: remove final s
-              else {
-                  possible_lemma = word.slice(0, -1);
-              }
-          } else if (word.endsWith('er')) {
-                  const commonadjs = new Set(['blacker','blanker','bolder','brasher','briefer','brighter','calmer','cheaper','chiller','cleaner','clearer','crisper','cleverer','deader','deeper','defter','drunker','duller','dumber','fainter','fairer','faster','fewer','firmer','fouler','franker','fuller','grander','greater','greener','grosser','harder','higher','hollower','iller','kinder','laxer','leaner','lesser','lighter','longer','louder','lower','meaner','moister','narrower','nearer','newer','odder','older','plumper','prouder','quieter','rasher','richer','righter','rounder','rougher','sharper','shorter','shyer','sicker','sleeker','slower','smaller','smoother','sourer','steeper','sterner','stiller','straighter','stricter','stronger','stupider','swifter','tenderer','tighter','tougher','warmer','weirder','wilder','yellower','younger']);
-                  const commonadjs2 = new Set(['bluer','braver','closer','completer','falser','finer','freer','gentler','graver','humbler','larger','lamer','looser','nicer','politer','purer','rarer','riper','safer','securer','simpler','squarer','tamer','truer','whiter']);
-                  const commonadjs3 = new Set(['angrier','bloodier','bossier','busier','chewier','chubbier','classier','cloudier','clumsier','crazier','creepier','crunchier','curlier','deadlier','dirtier','drier','earlier','easier','emptier','fancier','filthier','flakier','funnier','furrier','greasier','gloomier','greedier','happier','healthier','heavier','hungrier','juicier','lazier','littler','lonelier','prettier','readier','roomier','saltier','shinier','skinnier','smellier','windier','wealthier','tidier']);
-                  const commonadjs4 = new Set(["bigger","dimmer","fatter","fitter","flatter","hotter","madder","redder","sadder","slimmer","wetter"]);
-                  if (commonadjs.has(word)) {
-                      possible_lemma = word.slice(0, -2);        // remove -er
-                  } else if (commonadjs4.has(word)) {
-                      possible_lemma = word.slice(0, -3);        // double consonant
-                  } else if (commonadjs2.has(word)) {
-                      possible_lemma = word.slice(0, -1);        // remove only -r
-                  } else if (commonadjs3.has(word)) {
-                      possible_lemma = word.slice(0, -3) + "y";  // y → ier
-                  } else {possible_lemma = word;}
-        } else if (word.endsWith('est')) {
-                  const commonadjest = new Set(['blackest','blankest','boldest','brashest','brightest','briefest','calmest','cheapest','chillest','cleanest','clearest','crispest','cleverest','deadest','deepest','deftest','drunkest','dullest','dumbest','faintest','fairest','fastest','fewest','firmest','foulest','frankest','fullest','grandest','greatest','greenest','grossest','hardest','highest','hollowest','illest','kindest','laxest','leanest','lessest','lightest','longest','loudest','lowest','meanest','moistest','narrowest','nearest','newest','oddest','oldest','plumpest','proudest','quietest','rashest','richest','rightest','roundest','roughest','sharpest','shortest','shyest','sickest','sleekest','slowest','smallest','smoothest','sourer','sourest','steepest','sternest','stillest','straightest','strictest','strongest','stupidest','swiftest','tenderest','tightest','toughest','warmest','weirdest','wildest','yellowest','youngest']);
-                  const commonadjest2 = new Set(['bluest','bravest','closest','completest','falser','falsest','finest','freest','gentlest','gravest','humblest','largest','lamest','loosest','nicest','politest','purest','rarest','ripest','safest','securest','simplest','squarest','tamest','truest','whitest']);
-                  const commonadjest3 = new Set(['angriest','bloodiest','bossiest','busiest','chewiest','chubbiest','classiest','cloudiest','clumsiest','craziest','creepiest','crunchiest','curliest','deadliest','dirtiest','driest','earliest','easiest','emptiest','fanciest','filthiest','flakiest','funniest','furriest','greasiest','gloomiest','greediest','happiest','healthiest','heaviest','hungriest','juiciest','laziest','littlest','loneliest','prettiest','readiest','roomiest','saltiest','shiniest','skinniest','smelliest','windiest','wealthiest','tidiest']);
-                  const commonadjest4 = new Set(["biggest","dimmest","fattest","fittest","flattest","hottest","maddest","reddest","saddest","slimmest","wettest"]);
-                  if (commonadjest.has(word)) {
-                      possible_lemma = word.slice(0, -3);  // remove -est
-                  } else if (commonadjest4.has(word)) {
-                      possible_lemma = word.slice(0, -4);  // double consonant
-                  } else if (commonadjest2.has(word)) {
-                      possible_lemma = word.slice(0, -2);   // remove onlst -st
-                  } else if (commonadjest3.has(word)) {
-                      possible_lemma = word.slice(0, -4) + "y";   // y -> iest
-                  } else { possible_lemma = word;}
+              return "";
+          }
 
-        } else if (word.endsWith('ed')) {
-                  const oredBackExceptions = new Set(['bored','pored','gored','cored','scored','adored','snored','chored','whored','stored','ignored','encored','restored','explored','implored','outscored','deplored','underscored','unrestored','unopened']);
-                  const edSlice1Exceptions = new Set(["adhered","axed","cited","cleansed","convened","continued","created","freed","guided","intrigued","owed","recreated","shared","typed"]);
-                  const edSlice2Exception = new Set(['aimed','added','developed','erred','focused','purred','ordered','opened','reopened','reasoned','veiled','unveiled']);
-                  const lowerEdvcExceptions = new Set(["acquired","completed","excited","invited","persuaded","quoted","required"]);
-                  const l3 = len(word, -3);
+          // --- 3. Be-verbs ---
+          const beForms = {
+              "be": 1, "is": 1, "are": 1, "am": 1,
+              "was": 1, "were": 1, "being": 1, "been": 1
+          };
+
+        // 1. be-verbs
+        if (beForms[word]) {
+              possible_lemma = "be";
+        }
+
+        // 2. irregular plurals
+        if (possible_lemma === "") {
+              const pluralLemma = irregPlural(word);
+              if (pluralLemma !== "") {
+                  possible_lemma = pluralLemma;
+              }
+        }
+
+        // 3. irregular verbs
+        if (possible_lemma === "") {
+              const irregLemma = irreg(word);
+              if (irregLemma !== "") {
+                  possible_lemma = irregLemma;
+              }
+        }
+
+        // 4. regular endings
+        if (possible_lemma === "") {
+
+          //lemmatize words with various common endings
+          if (word.endsWith("oes") && !["shoes", "does", "goes"].includes(word)) {
+              possible_lemma = word.slice(0, -2); // remove "es"
+          }
+          else if (word.endsWith('es')) {
+            const backScut1Words = new Set(['axes','cuties','genies','movies','shoes','stereotypes','types','aches','backaches','headaches','stomachaches']);
+            const specialEsWords = new Set(["focuses","campuses","circuses","sinuses","choruses","fetuses","omnibuses","impetuses","pluses","minuses","buses","lotuses","viruses","mucuses","caucuses","cactuses","statuses","biases", "walruses"]);
+            const last2 = len(word, -2);
+            const last3 = len(word, -3);
+            const last4 = len(word, -4);
+            const last5 = len(word, -5);
+            if (endsExceptions.has(word)) {
+                    possible_lemma = word;
+                }
+                // words like "movies", "shoes", "cuties"
+                else if (backScut1Words.has(word) || (last3 === "e" && last2 === "e")) {
+                    possible_lemma = word.slice(0, -1);
+                }
+                // special -uses words
+                else if (specialEsWords.has(word)) {
+                    possible_lemma = word.slice(0, -2);
+                }
+                // babies → baby
+                else if (last3 === "i") {
+                    possible_lemma = word.slice(0, -3) + "y";
+                }
+                // vowel + es
+                else if (vowel.includes(last3)) {
+                    if (last3 === "u") {
+                        possible_lemma = word.slice(0, -1);
+                    } else {
+                        possible_lemma = word.slice(0, -2);
+                    }
+                }
+                // consonant + es
+                else {
+                    // ss, ch, sh, ia + l, x
+                    if (
+                        (last3 === "s" && last4 === "s") ||
+                        (last3 === "h" && last4 === "c") ||
+                        (last3 === "h" && last4 === "s") ||
+                        (last3 === "l" && last4 === "i" && last5 === "a") ||
+                        (last3 === "x")
+                    ) {
+                        possible_lemma = word.slice(0, -2);
+                    }
+
+                    // exceptions like "theses" → "these" (your eBackExceptions)
+                    else if (eBackExceptions.has(last4 + last3)) {
+                        possible_lemma = word.slice(0, -1);
+                    }
+
+                    // double letter before -es (e.g., "buzzes" → "buzz")
+                    else if (last3 === last4) {
+                        possible_lemma = word.slice(0, -3);
+                    }
+
+                    // vowel before consonant + es (e.g., "rises", "poses")
+                    else if (
+                        vowel.includes(last4) ||
+                        (last3 === "s" && last4 === "r") ||
+                        (last3 === "s" && last4 === "p")
+                    ) {
+                        possible_lemma = word.slice(0, -1);
+                    }
+
+                    else {
+                        possible_lemma = word;
+                    }
+                }
+          } else if (word.endsWith("s")) {
+                const last1 = len(word, -1);
+                const last2 = len(word, -2);
+
+                // 1. Words ending in -us → sometimes plural, sometimes not
+                if (last2 === "u") {
+                    if (wordsEndInU.has(word)) {
+                        possible_lemma = word.slice(0, -1);   // remove final s
+                    } else {
+                        possible_lemma = word;                // leave unchanged
+                    }
+                }
+                // 2. Words that should never be lemmatized
+                else if (endsExceptions.has(word)) {
+                    possible_lemma = word;
+                }
+                // 3. Words ending in ss → not plural (e.g., "boss", "glass")
+                else if (last2 === "s") {
+                    possible_lemma = word;
+                }
+                // 4. Words ending in 's (possessives)
+                else if (last2 === "'") {
+                    possible_lemma = word;
+                }
+                // 5. Words ending in -is (not plural)
+                else if (last2 === "i") {
+                    possible_lemma = word;
+                }
+                // 6. Default: remove final s
+                else {
+                    possible_lemma = word.slice(0, -1);
+                }
+            } else if (word.endsWith('er')) {
+                    const commonadjs = new Set(['blacker','blanker','bolder','brasher','briefer','brighter','calmer','cheaper','chiller','cleaner','clearer','crisper','cleverer','deader','deeper','defter','drunker','duller','dumber','fainter','fairer','faster','fewer','firmer','fouler','franker','fuller','grander','greater','greener','grosser','harder','higher','hollower','iller','kinder','laxer','leaner','lesser','lighter','longer','louder','lower','meaner','moister','narrower','nearer','newer','odder','older','plumper','prouder','quieter','rasher','richer','righter','rounder','rougher','sharper','shorter','shyer','sicker','sleeker','slower','smaller','smoother','softer','sourer','steeper','sterner','stiller','straighter','stricter','stronger','stupider','swifter','tenderer','tighter','tougher','warmer','weirder','wilder','yellower','younger']);
+                    const commonadjs2 = new Set(['bluer','braver','closer','completer','denser','falser','finer','freer','gentler','graver','humbler','larger','lamer','looser','nicer','politer','purer','rarer','riper','safer','securer','simpler','squarer','tamer','truer','whiter']);
+                    const commonadjs3 = new Set(['angrier','bloodier','bossier','busier','chewier','chubbier','classier','cloudier','clumsier','crazier','creepier','crunchier','curlier','deadlier','dirtier','drier','earlier','easier','emptier','fancier','filthier','flakier','funnier','furrier','greasier','gloomier','greedier','happier','healthier','heavier','hungrier','juicier','lazier','littler','lonelier','prettier','readier','roomier','saltier','shinier','skinnier','smellier','windier','wealthier','tidier']);
+                    const commonadjs4 = new Set(["bigger","dimmer","fatter","fitter","flatter","hotter","madder","redder","sadder","slimmer","wetter"]);
+                    if (commonadjs.has(word)) {
+                        possible_lemma = word.slice(0, -2);        // remove -er
+                    } else if (commonadjs4.has(word)) {
+                        possible_lemma = word.slice(0, -3);        // double consonant
+                    } else if (commonadjs2.has(word)) {
+                        possible_lemma = word.slice(0, -1);        // remove only -r
+                    } else if (commonadjs3.has(word)) {
+                        possible_lemma = word.slice(0, -3) + "y";  // y → ier
+                    } else {possible_lemma = word;}
+          } else if (word.endsWith('est')) {
+                    const commonadjest = new Set(['blackest','blankest','boldest','brashest','brightest','briefest','calmest','cheapest','chillest','cleanest','clearest','crispest','cleverest','deadest','deepest','deftest','drunkest','dullest','dumbest','faintest','fairest','fastest','fewest','firmest','foulest','frankest','fullest','grandest','greatest','greenest','grossest','hardest','highest','hollowest','illest','kindest','laxest','leanest','lessest','lightest','longest','loudest','lowest','meanest','moistest','narrowest','nearest','newest','oddest','oldest','plumpest','proudest','quietest','rashest','richest','rightest','roundest','roughest','sharpest','shortest','shyest','sickest','sleekest','slowest','smallest','smoothest','softest','sourest','steepest','sternest','stillest','straightest','strictest','strongest','stupidest','swiftest','tenderest','tightest','toughest','warmest','weirdest','wildest','yellowest','youngest']);
+                    const commonadjest2 = new Set(['bluest','bravest','closest','completest','densest','falser','falsest','finest','freest','gentlest','gravest','humblest','largest','lamest','loosest','nicest','politest','purest','rarest','ripest','safest','securest','simplest','squarest','tamest','truest','whitest']);
+                    const commonadjest3 = new Set(['angriest','bloodiest','bossiest','busiest','chewiest','chubbiest','classiest','cloudiest','clumsiest','craziest','creepiest','crunchiest','curliest','deadliest','dirtiest','driest','earliest','easiest','emptiest','fanciest','filthiest','flakiest','funniest','furriest','greasiest','gloomiest','greediest','happiest','healthiest','heaviest','hungriest','juiciest','laziest','littlest','loneliest','prettiest','readiest','roomiest','saltiest','shiniest','skinniest','smelliest','windiest','wealthiest','tidiest']);
+                    const commonadjest4 = new Set(["biggest","dimmest","fattest","fittest","flattest","hottest","maddest","reddest","saddest","slimmest","wettest"]);
+                    if (commonadjest.has(word)) {
+                        possible_lemma = word.slice(0, -3);  // remove -est
+                    } else if (commonadjest4.has(word)) {
+                        possible_lemma = word.slice(0, -4);  // double consonant
+                    } else if (commonadjest2.has(word)) {
+                        possible_lemma = word.slice(0, -2);   // remove onlst -st
+                    } else if (commonadjest3.has(word)) {
+                        possible_lemma = word.slice(0, -4) + "y";   // y -> iest
+                    } else { possible_lemma = word;}
+
+          } else if (word.endsWith('ed')) {
+                    const oredBackExceptions = new Set(['bored','pored','gored','cored','scored','adored','snored','chored','whored','stored','ignored','encored','restored','explored','implored','outscored','deplored','underscored','unrestored','unopened']);
+                    const edSlice1Exceptions = new Set(["adhered","aged","axed","challenged","cited","cleansed","convened","continued","created","freed","guided","intrigued","owed","recreated","shared","typed"]);
+                    const edSlice2Exception = new Set(['aimed','added','developed','erred','focused','purred','ordered','opened','reopened','reasoned','veiled','unveiled']);
+                    const lowerEdvcExceptions = new Set(["acquired","completed","excited","invited","persuaded","quoted","required"]);
+                    const l3 = len(word, -3);
+                    const l4 = len(word, -4);
+                    const l5 = len(word, -5);
+                    const l6 = len(word, -6);
+                    // Words that should never be lemmatized
+                    if (endsDExceptions.has(word)) {
+                            possible_lemma = word;
+                    }
+                    // Handle ooed words (booed, cooed, mooed, etc.)
+                    else if (word.endsWith("ooed")) {
+                        possible_lemma = word.slice(0, -2);   // remove only "ed"
+                    }
+                    // Handle eed words (freed → free, agreed → agree)
+                    else if (word.endsWith("eed")) {
+                        possible_lemma = word.slice(0, -1);   // remove only "d"
+                    }
+                    else if (word.endsWith("yed")) {
+                        possible_lemma = word.slice(0, -2);   // remove "ed"
+                    }
+                    // Handle owed words (snowed → snow, owed → owe), but only if not in edSlice1Exceptions
+                    else if (word.endsWith("owed") && !edSlice1Exceptions.has(word)) {
+                        possible_lemma = word.slice(0, -2);   // remove "ed"
+                    }
+                    // Words where removing "ed" is correct
+                    else if (edSlice2Exception.has(word)) {
+                        possible_lemma = word.slice(0, -2);
+                    }
+                    // Words beginning with "un-" but not "under-"
+                    else if ( word.startsWith("un") && !word.startsWith("under") && !beginUNedExceptions.has(word)) {
+                            possible_lemma = word;
+                    }
+                    // Words where only the final "d" should be removed
+                    else if (
+                            (l5 === "e" && l4 === "a" && l3 === "s") ||   // "eased"
+                            (l5 === "a" && l4 === "i" && l3 === "s") ||   // "aised"
+                            (l4 === "y" && l3 === "p") ||                 // "yped"
+                            (l4 === "r" && l3 === "c") ||                 // "rced"
+                            (l4 === "p" && l3 === "s") ||                 // "sped"
+                            lastx(word, 7) === "changed" ||
+                            lastx(word, 6) === "ranged" ||
+                            lastx(word, 5) === "inged" ||
+                            edSlice1Exceptions.has(word)
+                          ) {possible_lemma = word.slice(0, -1);
+                      }
+                    // Words where removing "ed" is correct (broad patterns)
+                    else if (
+                            (l5 === "o" && l4 === "a") ||                 // "oaked"
+                            (l5 === "e" && l4 === "a") ||                 // "eaked"
+                            l3 === "x" ||                                 // "mixed", "boxed"
+                            (l4 === "e" && l3 === "n") ||                 // "tended", "mended"
+                            (l4 === "n" && l3 === "g")                    // "ringed"
+                          ){ possible_lemma = word.slice(0, -2);
+                    }
+                    // y → ied → y
+                    else if (l3 === "i") {
+                            possible_lemma = word.slice(0, -3) + "y";
+                    }
+                    // ey → eyed (played, obeyed, stayed)
+                    else if (l3 === "y") {
+                            possible_lemma = word.slice(0, -2);
+                    }
+                    // Vowel + n + ed patterns
+                    else if (vowel.includes(l4) && l3 === "n") {
+                            if (word.endsWith("ined")){
+                              possible_lemma = word.slice(0, -1);
+                            } else if (!vowel.includes(l5) && !vowel.includes(l6) && l6 !== "r") {
+                                possible_lemma = word.slice(0, -2);
+                            } else if (!vowel.includes(l5)) {
+                                possible_lemma = word.slice(0, -1);
+                            } else {
+                                possible_lemma = word.slice(0, -2);
+                            }
+                    }
+
+                    // er/ or / ai / le patterns
+                    else if (
+                            (l3 === "r" && (l4 === "e" || l4 === "o")) ||
+                            (l5 === "a" && l4 === "i") ||
+                            (l3 === "l" && l4 === "e")
+                          ) {
+                            if (oredBackExceptions.has(word)) {
+                                possible_lemma = word.slice(0, -1);
+                            } else {
+                                possible_lemma = word.slice(0, -2);
+                            }
+                    }
+
+                    // Double consonant patterns (stopped, filled)
+                    else if (l3 === l4) {
+
+                            if (l3 === "s" || l3 === "l") {
+                                if (llBack2to1.has(word.slice(0, -3))) {
+                                    possible_lemma = word.slice(0, -3);
+                                } else {
+                                    possible_lemma = word.slice(0, -2);
+                                }
+                            } else {
+                                possible_lemma = word.slice(0, -3);
+                            }
+                    }
+
+                    // Consonant + consonant + ed
+                    else if (!vowel.includes(l3) && !vowel.includes(l4)) {
+
+                        if (eBackExceptions.has(l4 + l3)) {
+                                possible_lemma = word.slice(0, -1);
+                        } else if (l3 === "l") {
+                                if (l4 === "r") {
+                                    possible_lemma = word.slice(0, -2);
+                                } else {
+                                    possible_lemma = word.slice(0, -1);
+                                }
+                        } else {
+                                possible_lemma = word.slice(0, -2);
+                            }
+                    }
+
+                    // Vowel + consonant + ed
+                    else if (!vowel.includes(l3) && vowel.includes(l4)) {
+                        if (lowerEdvcExceptions.has(word)) {
+                            possible_lemma = word.slice(0, -1);
+                        } else if (l3 === "r" && l4 === "e" && l5 === l6) {
+                            possible_lemma = word.slice(0, -2);
+                        } else if (l3 === "t" && (l4 === "i" || l4 === "e")) {
+                            possible_lemma = word.slice(0, -2);
+                        } else if ((vowel.includes(l5) && l4 === l5) ||(l5 === "u" && !(l4 === "a" && l3 === "t"))) {
+                            possible_lemma = word.slice(0, -2);
+                        } else if ((l3 === "r" && vowel.includes(l5)) || (l3 === "g" && vowel.includes(l5)) || (l3 === "d" && vowel.includes(l5)) || l3 === "w") {
+                                possible_lemma = word.slice(0, -2);
+                        } else {
+                                possible_lemma = word.slice(0, -1);
+                        }
+                    }
+
+                                      // e → ed (baked, hoped)
+                    else if (l3 === "e") {
+                            possible_lemma = word.slice(0, -1);
+                    }
+
+                    // Default fallback
+                    else {possible_lemma = word;}
+
+          }  else if (word.endsWith("ing")) {
+                  const oringBackExceptions = new Set(['acquiring','completing','creating','convening','recreating','persuading','boring','requiring','quoting','inspiring','assuming','poring','goring','coring','scoring','adoring','snoring','choring','whoring','storing','ignoring','encoring','restoring','exploring','imploring','outscoring','deploring','underscoring','unrestoring']);
+                  const leaveAloneExceptions = new Set(['boing','bring','ceiling','during','evening','king','morning','ongoing','outing','outgoing','offspring','outstanding','ring','sing','sling','spring','handspring','wellspring','sting','string','hamstring','drawstring','heartstring','shoestring','swing','thing','well-being','wing','wring']);
+                  const ingTocutExceptions = new Set(['adding','asking','allowing','aiming','developing','erring','focusing','freezing','opening','reopening','reasoning','unveiling','veiling','waxing']);
+                  const ingToaddEExceptions = new Set(['adhering','citing','continuing','exciting','eying','inviting','owing','sharing','tiring','using']);
+                  const l3 = len(word, -3);   // i
                   const l4 = len(word, -4);
                   const l5 = len(word, -5);
                   const l6 = len(word, -6);
+                  const l7 = len(word, -7);
+
                   // Words that should never be lemmatized
-                  if (endsDExceptions.has(word)) {
-                          possible_lemma = word;
+                  if (leaveAloneExceptions.has(word)) {
+                      possible_lemma = word;
                   }
-                  // Handle ooed words (booed, cooed, mooed, etc.)
-                  else if (word.endsWith("ooed")) {
-                      possible_lemma = word.slice(0, -2);   // remove only "ed"
+                  // Words where we simply remove "ing"
+                  else if (ingTocutExceptions.has(word)) {
+                      possible_lemma = word.slice(0, -3);
                   }
-                  // Handle eed words (freed → free, agreed → agree)
-                  else if (word.endsWith("eed")) {
-                      possible_lemma = word.slice(0, -1);   // remove only "d"
+                  // 3. Words where we remove "ing" and add "e"
+                  else if (ingToaddEExceptions.has(word)) {
+                      possible_lemma = word.slice(0, -3) + "e";
                   }
-                  else if (word.endsWith("yed")) {
-                      possible_lemma = word.slice(0, -2);   // remove "ed"
-                  }
-                  // Handle owed words (snowed → snow, owed → owe), but only if not in edSlice1Exceptions
-                  else if (word.endsWith("owed") && !edSlice1Exceptions.has(word)) {
-                      possible_lemma = word.slice(0, -2);   // remove "ed"
-                  }
-                  // Words where removing "ed" is correct
-                  else if (edSlice2Exception.has(word)) {
-                      possible_lemma = word.slice(0, -2);
-                  }
-                  // Words beginning with "un-" but not "under-"
-                  else if ( word.startsWith("un") && !word.startsWith("under") && !beginUNedExceptions.has(word)) {
-                          possible_lemma = word;
-                  }
-                  // Words where only the final "d" should be removed
+
+                  // 4. Words beginning with "un-" but not "under-"
                   else if (
-                          (l5 === "e" && l4 === "a" && l3 === "s") ||   // "eased"
-                          (l5 === "a" && l4 === "i" && l3 === "s") ||   // "aised"
-                          (l4 === "y" && l3 === "p") ||                 // "yped"
-                          (l4 === "r" && l3 === "c") ||                 // "rced"
-                          (l4 === "p" && l3 === "s") ||                 // "sped"
-                          word === "aged" ||
-                          word === "challenged" ||
-                          lastx(word, 7) === "changed" ||
-                          lastx(word, 6) === "ranged" ||
-                          lastx(word, 5) === "inged" ||
-                          edSlice1Exceptions.has(word)
-                        ) {possible_lemma = word.slice(0, -1);
-                    }
-                  // Words where removing "ed" is correct (broad patterns)
+                      word.startsWith("un") &&
+                      !word.startsWith("under") &&
+                      !beginUNingExceptions.has(word)
+                  ) {
+                      possible_lemma = word;
+                  }
+
+                  // 5. Words where the base ends in "e" (your original oringBack logic)
                   else if (
-                          (l5 === "o" && l4 === "a") ||                 // "oaked"
-                          (l5 === "e" && l4 === "a") ||                 // "eaked"
-                          l3 === "x" ||                                 // "mixed", "boxed"
-                          (l4 === "e" && l3 === "n") ||                 // "tended", "mended"
-                          (l4 === "n" && l3 === "g")                    // "ringed"
-                        ){ possible_lemma = word.slice(0, -2);
-                  }
-                  // y → ied → y
-                  else if (l3 === "i") {
-                          possible_lemma = word.slice(0, -3) + "y";
-                  }
-                  // ey → eyed (played, obeyed, stayed)
-                  else if (l3 === "y") {
-                          possible_lemma = word.slice(0, -2);
-                  }
-                  // e → ed (baked, hoped)
-                  else if (l3 === "e") {
-                          possible_lemma = word.slice(0, -1);
-                  }
-                  // Vowel + n + ed patterns
-                  else if (vowel.includes(l4) && l3 === "n") {
-
-                          if (!vowel.includes(l5) && !vowel.includes(l6) && l6 !== "r") {
-                              possible_lemma = word.slice(0, -2);
-                          }
-                          else if (!vowel.includes(l5)) {
-                              possible_lemma = word.slice(0, -1);
-                          }
-                          else {
-                              possible_lemma = word.slice(0, -2);
-                          }
+                      oringBackExceptions.has(word) ||
+                      (l6 === "e" && l5 === "a" && l4 === "s") ||
+                      (l6 === "a" && l5 === "i" && l4 === "s") ||
+                      (l5 === "y" && l4 === "p") ||
+                      (l5 === "r" && l4 === "c") ||
+                      (l5 === "p" && l4 === "s") ||
+                      word === "challenging" ||
+                      word === "aging" ||
+                      (
+                          l5 === "n" && l4 === "g" &&
+                          (lastx(word, 8) === "changing" ||
+                          lastx(word, 6) === "ranging" ||
+                          lastx(word, 5) === "inging")
+                      )
+                  ) {
+                      possible_lemma = word.slice(0, -3) + "e";
                   }
 
-                  // er/ or / ai / le patterns
+                  // 6. Words ending in "thing"
+                  else if (word.endsWith("thing")) {
+                      possible_lemma = word;
+                  }
+
+                  // 7. Words where we remove "ing" (ea, oa, x, en patterns)
                   else if (
-                          (l3 === "r" && (l4 === "e" || l4 === "o")) ||
-                          (l5 === "a" && l4 === "i") ||
-                          (l3 === "l" && l4 === "e")
-                        ) {
-                          if (oredBackExceptions.has(word)) {
-                              possible_lemma = word.slice(0, -1);
-                          } else {
-                              possible_lemma = word.slice(0, -2);
-                          }
+                      (l6 === "e" && l5 === "a") ||
+                      (l6 === "o" && l5 === "a") ||
+                      l4 === "x" ||
+                      (l5 === "e" && l4 === "n")
+                  ) {
+                      possible_lemma = word.slice(0, -3);
                   }
 
-                  // Double consonant patterns (stopped, filled)
-                  else if (l3 === l4) {
-
-                          if (l3 === "s" || l3 === "l") {
-                              if (llBack2to1.has(word.slice(0, -3))) {
-                                  possible_lemma = word.slice(0, -3);
-                              } else {
-                                  possible_lemma = word.slice(0, -2);
-                              }
-                          } else {
-                              possible_lemma = word.slice(0, -3);
-                          }
+                  // 8. Words ending in "cring" (e.g., "caring")
+                  else if (l4 === "c" && l5 === "r") {
+                      possible_lemma = word.slice(0, -3) + "e";
                   }
 
-                  // Consonant + consonant + ed
-                  else if (!vowel.includes(l3) && !vowel.includes(l4)) {
+                  // 9. Words ending in "ying" or "eeing"
+                  else if (l4 === "y" || (l4 === "e" && l5 === "e")) {
+                      possible_lemma = word.slice(0, -3);
+                  }
 
-                      if (eBackExceptions.has(l4 + l3)) {
-                              possible_lemma = word.slice(0, -1);
-                      } else if (l3 === "l") {
-                              if (l4 === "r") {
-                                  possible_lemma = word.slice(0, -2);
-                              } else {
-                                  possible_lemma = word.slice(0, -1);
-                              }
+                  // 10. Words ending in "ialing" etc.
+                  else if (l4 === "l" && l5 === "i" && l6 === "a") {
+                      possible_lemma = word.slice(0, -3);
+                  }
+
+                  // 11. Vowel + n + ing patterns
+                  else if (vowel.includes(l5) && l4 === "n") {
+                      if (word.endsWith('ining')){
+                        possible_lemma = word.slice(0, -3) + "e";
+                      } else if (!vowel.includes(l6) && !vowel.includes(l7) && l7 !== "r") {
+                          possible_lemma = word.slice(0, -3);
+                      } else if (!vowel.includes(l6)) {
+                          possible_lemma = word.slice(0, -3) + "e";
                       } else {
-                              possible_lemma = word.slice(0, -2);
-                          }
-                  }
-
-                  // Vowel + consonant + ed
-                  else if (!vowel.includes(l3) && vowel.includes(l4)) {
-                      if (lowerEdvcExceptions.has(word)) {
-                          possible_lemma = word.slice(0, -1);
-                      } else if (l3 === "r" && l4 === "e" && l5 === l6) {
-                          possible_lemma = word.slice(0, -2);
-                      } else if (l3 === "t" && (l4 === "i" || l4 === "e")) {
-                          possible_lemma = word.slice(0, -2);
-                      } else if ((vowel.includes(l5) && l4 === l5) ||(l5 === "u" && !(l4 === "a" && l3 === "t"))) {
-                          possible_lemma = word.slice(0, -2);
-                      } else if ((l3 === "r" && vowel.includes(l5)) || (l3 === "g" && vowel.includes(l5)) || (l3 === "d" && vowel.includes(l5)) || l3 === "w") {
-                              possible_lemma = word.slice(0, -2);
-                      } else {
-                              possible_lemma = word.slice(0, -1);
+                          possible_lemma = word.slice(0, -3);
                       }
                   }
 
-                  // Default fallback
-                  else {possible_lemma = word;}
+                  // 12. er/ el / or / ai patterns
+                  else if (
+                      (l4 === "r" && l5 === "e") ||
+                      (l4 === "l" && l5 === "e") ||
+                      (l4 === "r" && l5 === "o") ||
+                      (l6 === "a" && l5 === "i")
+                  ) {
+                      possible_lemma = word.slice(0, -3);
+                  }
 
-        }  else if (word.endsWith("ing")) {
-                const oringBackExceptions = new Set(['acquiring','completing','creating','convening','recreating','persuading','boring','requiring','quoting','inspiring','assuming','poring','goring','coring','scoring','adoring','snoring','choring','whoring','storing','ignoring','encoring','restoring','exploring','imploring','outscoring','deploring','underscoring','unrestoring']);
-                const leaveAloneExceptions = new Set(['boing','bring','ceiling','during','evening','king','morning','ongoing','outing','outgoing','offspring','outstanding','ring','sing','sling','spring','handspring','wellspring','sting','string','hamstring','drawstring','heartstring','shoestring','swing','thing','well-being','wing','wring']);
-                const ingTocutExceptions = new Set(['adding','asking','allowing','aiming','developing','erring','focusing','freezing','opening','reopening','reasoning','unveiling','veiling','waxing']);
-                const ingToaddEExceptions = new Set(['adhering','citing','continuing','exciting','eying','inviting','owing','sharing','tiring','using']);
-                const l3 = len(word, -3);   // i
-                const l4 = len(word, -4);
-                const l5 = len(word, -5);
-                const l6 = len(word, -6);
-                const l7 = len(word, -7);
+                  // 13. Vowel doubling patterns
+                  else if (vowel.includes(l5) && l5 === l6) {
+                      possible_lemma = word.slice(0, -3);
+                  }
 
-                // Words that should never be lemmatized
-                if (leaveAloneExceptions.has(word)) {
-                    possible_lemma = word;
-                }
-                // Words where we simply remove "ing"
-                else if (ingTocutExceptions.has(word)) {
-                    possible_lemma = word.slice(0, -3);
-                }
-                // 3. Words where we remove "ing" and add "e"
-                else if (ingToaddEExceptions.has(word)) {
-                    possible_lemma = word.slice(0, -3) + "e";
-                }
+                  // 14. Double consonant patterns
+                  else if (l5 === l4) {
+                      if (l5 === "s" || l5 === "l") {
+                          if (llBack2to1.has(word.slice(0, -4))) {
+                              possible_lemma = word.slice(0, -4);
+                          } else {
+                              possible_lemma = word.slice(0, -3);
+                          }
+                      } else {
+                          possible_lemma = word.slice(0, -4);
+                      }
+                  }
 
-                // 4. Words beginning with "un-" but not "under-"
-                else if (
-                    word.startsWith("un") &&
-                    !word.startsWith("under") &&
-                    !beginUNingExceptions.includes(word)
-                ) {
-                    possible_lemma = word;
-                }
+                  // 15. Consonant + ing patterns
+                  else if (!vowel.includes(l4)) {
+                      if (vowel.includes(l5)) {
+                          if (l6 === l5 || (l4 === "r" && vowel.includes(l6))) {
+                              possible_lemma = word.slice(0, -3);
+                          } else if (
+                              (l5 === "e" && l6 === "i") ||
+                              (l4 === "r" && l5 === "u")
+                          ) {
+                              possible_lemma = word.slice(0, -3) + "e";
+                          } else if (
+                              (l4 === "t" && (l5 === "i" || l5 === "e"))
+                          ) {
+                              possible_lemma = word.slice(0, -3);
+                          } else if (
+                              (vowel.includes(l6) && l5 === l6) ||
+                              (l6 === "u" && !(l5 === "a" && l4 === "t"))
+                          ) {
+                              possible_lemma = word.slice(0, -3) + "e";
+                          } else if (
+                              (l4 === "r" && vowel.includes(l6)) ||
+                              (l4 === "g" && vowel.includes(l6)) ||
+                              (l4 === "d" && vowel.includes(l6)) ||
+                              l4 === "w"
+                          ) {
+                              possible_lemma = word.slice(0, -3);
+                          } else {
+                              possible_lemma = word.slice(0, -3) + "e";
+                          }
+                      } else if (eBackExceptions.has(l5 + l4)) {
+                          possible_lemma = word.slice(0, -3) + "e";
+                      } else if (!vowel.includes(l5)) {
+                          possible_lemma = word.slice(0, -3);
+                      }
+                  }
 
-                // 5. Words where the base ends in "e" (your original oringBack logic)
-                else if (
-                    oringBackExceptions.has(word) ||
-                    (l6 === "e" && l5 === "a" && l4 === "s") ||
-                    (l6 === "a" && l5 === "i" && l4 === "s") ||
-                    (l5 === "y" && l4 === "p") ||
-                    (l5 === "r" && l4 === "c") ||
-                    (l5 === "p" && l4 === "s") ||
-                    word === "challenging" ||
-                    word === "aging" ||
-                    (
-                        l5 === "n" && l4 === "g" &&
-                        (lastx(word, 8) === "changing" ||
-                        lastx(word, 6) === "ranging" ||
-                        lastx(word, 5) === "inging")
-                    )
-                ) {
-                    possible_lemma = word.slice(0, -3) + "e";
-                }
+                  // 16. Vowel + ing patterns
+                  else if (vowel.includes(l4)) {
+                      if (l4 === l5) {
+                          possible_lemma = word.slice(0, -4);
+                      } else {
+                          possible_lemma = word.slice(0, -4) + "e";
+                      }
+                  }
 
-                // 6. Words ending in "thing"
-                else if (word.endsWith("thing")) {
-                    possible_lemma = word;
-                }
-
-                // 7. Words where we remove "ing" (ea, oa, x, en patterns)
-                else if (
-                    (l6 === "e" && l5 === "a") ||
-                    (l6 === "o" && l5 === "a") ||
-                    l4 === "x" ||
-                    (l5 === "e" && l4 === "n")
-                ) {
-                    possible_lemma = word.slice(0, -3);
-                }
-
-                // 8. Words ending in "cring" (e.g., "caring")
-                else if (l4 === "c" && l5 === "r") {
-                    possible_lemma = word.slice(0, -3) + "e";
-                }
-
-                // 9. Words ending in "ying" or "eeing"
-                else if (l4 === "y" || (l4 === "e" && l5 === "e")) {
-                    possible_lemma = word.slice(0, -3);
-                }
-
-                // 10. Words ending in "ialing" etc.
-                else if (l4 === "l" && l5 === "i" && l6 === "a") {
-                    possible_lemma = word.slice(0, -3);
-                }
-
-                // 11. Vowel + n + ing patterns
-                else if (vowel.includes(l5) && l4 === "n") {
-                    if (!vowel.includes(l6) && !vowel.includes(l7) && l7 !== "r") {
-                        possible_lemma = word.slice(0, -3);
-                    } else if (!vowel.includes(l6)) {
-                        possible_lemma = word.slice(0, -3) + "e";
-                    } else {
-                        possible_lemma = word.slice(0, -3);
-                    }
-                }
-
-                // 12. er/ el / or / ai patterns
-                else if (
-                    (l4 === "r" && l5 === "e") ||
-                    (l4 === "l" && l5 === "e") ||
-                    (l4 === "r" && l5 === "o") ||
-                    (l6 === "a" && l5 === "i")
-                ) {
-                    possible_lemma = word.slice(0, -3);
-                }
-
-                // 13. Vowel doubling patterns
-                else if (vowel.includes(l5) && l5 === l6) {
-                    possible_lemma = word.slice(0, -3);
-                }
-
-                // 14. Double consonant patterns
-                else if (l5 === l4) {
-                    if (l5 === "s" || l5 === "l") {
-                        if (llBack2to1.has(word.slice(0, -4))) {
-                            possible_lemma = word.slice(0, -4);
-                        } else {
-                            possible_lemma = word.slice(0, -3);
-                        }
-                    } else {
-                        possible_lemma = word.slice(0, -4);
-                    }
-                }
-
-                // 15. Consonant + ing patterns
-                else if (!vowel.includes(l4)) {
-                    if (vowel.includes(l5)) {
-                        if (l6 === l5 || (l4 === "r" && vowel.includes(l6))) {
-                            possible_lemma = word.slice(0, -3);
-                        } else if (
-                            (l5 === "e" && l6 === "i") ||
-                            (l4 === "r" && l5 === "u")
-                        ) {
-                            possible_lemma = word.slice(0, -3) + "e";
-                        } else if (
-                            (l4 === "t" && (l5 === "i" || l5 === "e"))
-                        ) {
-                            possible_lemma = word.slice(0, -3);
-                        } else if (
-                            (vowel.includes(l6) && l5 === l6) ||
-                            (l6 === "u" && !(l5 === "a" && l4 === "t"))
-                        ) {
-                            possible_lemma = word.slice(0, -3) + "e";
-                        } else if (
-                            (l4 === "r" && vowel.includes(l6)) ||
-                            (l4 === "g" && vowel.includes(l6)) ||
-                            (l4 === "d" && vowel.includes(l6)) ||
-                            l4 === "w"
-                        ) {
-                            possible_lemma = word.slice(0, -3);
-                        } else {
-                            possible_lemma = word.slice(0, -3) + "e";
-                        }
-                    } else if (eBackExceptions.has(l5 + l4)) {
-                        possible_lemma = word.slice(0, -3) + "e";
-                    } else if (!vowel.includes(l5)) {
-                        possible_lemma = word.slice(0, -3);
-                    }
-                }
-
-                // 16. Vowel + ing patterns
-                else if (vowel.includes(l4)) {
-                    if (l4 === l5) {
-                        possible_lemma = word.slice(0, -4);
-                    } else {
-                        possible_lemma = word.slice(0, -4) + "e";
-                    }
-                }
-
-                // 17. Fallback
-                else {
-                    possible_lemma = word;
-                }
-        } else {
-          possible_lemma = word;
+                  // 17. Fallback
+                  else {
+                      possible_lemma = word;
+                  }
+          } else {
+            possible_lemma = word;
+          }
         }
 
         diff_words.push(possible_lemma);
@@ -1975,35 +1992,67 @@ const Lemmatize = function(text){
 }
 
 //Oldie but goodie
-const safeDivision = function(x,y){
-    if (y==0){
+function safeDivision(x, y) {
+    if (typeof x !== "number" || typeof y !== "number") {
         return 0;
-    } else {return (x/y);}
+    }
+    if (y === 0) {
+        return 0;
+    }
+    return x / y;
 }
 
 //Takes a string, provides word count
-const CountWords = function(text){
-    let temp1 = text.toLowerCase();
-    let temp2 = temp1.replace(/[.,\/#!$%\^&\*;:?{}=\_`~()]/g,"");
-    temp2 = temp2.replace(/(\r\n|\n|\r)/g, "");
-    let temp4 = temp2.replace(/\s{2,}/g," ");
-    let check = temp4.split(" ");
-    let realOnes = [];
-    for (let i=0; i<check.length; i++){
-      if (check[i] != ""){
-        realOnes.push(check[i]);
-      }
+function CountWords(text) {
+    // 1. Lowercase
+    var cleaned = text.toLowerCase();
+    // 2. Remove punctuation except hyphens and apostrophes
+    cleaned = cleaned.replace(/[#"!$%\^&\*;:?{}=\_`~()]/g, "");
+    // 3. Convert em/en dashes to spaces
+    cleaned = cleaned.replace(/[\u2014\u2013]/g, " ");
+    // 4. Normalize slashes, newlines, backslashes to spaces
+    cleaned = cleaned.replace(/[\r\n\/\\]+/g, " ");
+    // 5. Hyphen exceptions
+    var hyphenExceptions = {
+        "pre": 1, "non": 1, "re": 1, "co": 1, "semi": 1, "quasi": 1,
+        "post": 1, "pro": 1, "under": 1, "mid": 1, "inter": 1,
+        "pseudo": 1, "anti": 1, "contra": 1, "multi": 1, "ultra": 1
+    };
+    // 6. Split hyphenated words unless first part is an exception
+    cleaned = cleaned.replace(/\b([a-z0-9]+(?:-[a-z0-9]+)+)\b/gi, function(match) {
+        var parts = match.split("-");
+        var first = parts[0].toLowerCase();
+        // If first part is an exception, keep the hyphenated word intact
+        if (hyphenExceptions[first]) {
+            return match;
+        }
+        // Otherwise split into separate words
+        return parts.join(" ");
+    });
+    // 7. Collapse multiple spaces
+    cleaned = cleaned.replace(/\s+/g, " ");
+    // 8. Trim leading/trailing spaces
+    cleaned = cleaned.replace(/^\s+|\s+$/g, "");
+    // 9. Handle empty string
+    if (cleaned === "") {
+        return 0;
     }
-    return realOnes.length;
+    // 10. Split and count
+    return cleaned.split(" ").length;
 }
 
 //Takes a string, provides a sentence count based on punctuation and line breaks
-const CountSentences = function(text){
-    let check= text.split(/[.?!|\r\n/\\]+/);
-    if (check[check.length - 1]==""){
-        check.pop();
+function CountSentences(text) {
+    // Split on sentence-ending punctuation or line breaks
+    var parts = text.split(/[.?!]+|\r\n|\n|\r/);
+    // Remove empty entries caused by trailing punctuation or blank lines
+    var count = 0;
+    for (var i = 0; i < parts.length; i++) {
+        if (parts[i].replace(/\s+/g, "") !== "") {
+            count++;
+        }
     }
-    return check.length;
+    return count;
 }
 
 //Takes a string and provides the mean length of sentences.
@@ -2062,43 +2111,49 @@ const ProvideNgrams = function (number, text){
 }
 
 //Takes a string, provides an array of sentences as is;
-const ProvideSentences = function(text){
-  let cleaned = text.replace(/(\r\n|\n|\r)/g, ". "); // Replace line breaks with periods and spaces
-  // List of abbreviations that should not trigger a split
-  const abbreviations = ["Mr.", "mr.", "Mrs.", "mrs.", "Ms.", "ms.", "Dr.", "dr.", "Prof.", "prof.", "Sr.", "sr.", "St.", "st."];
-  let sentences = [];
-  let buffer = "";
-  let i = 0;
-  while (i < cleaned.length) {
-      const char = cleaned[i];
-      buffer += char;
+function ProvideSentences(text) {
+    // 1. Normalize line breaks into ". "
+    var cleaned = text.replace(/(\r\n|\n|\r)/g, ". ");
 
-      if (char === "." || char === "!" || char === "?") {
-        // Look ahead: skip whitespace to check if a sentence ends
-        let j = i + 1;
-        while (j < cleaned.length && /\s/.test(cleaned[j])) {
-          j++;
+    // 2. Abbreviations that should NOT trigger a split
+    var abbreviations = {
+        "mr.": 1, "mrs.": 1, "ms.": 1, "dr.": 1, "prof.": 1,
+        "sr.": 1, "st.": 1
+    };
+    var sentences = [];
+    var buffer = "";
+    var i = 0;
+    var len = cleaned.length;
+    while (i < len) {
+        var ch = cleaned.charAt(i);
+        buffer += ch;
+        // Sentence-ending punctuation
+        if (ch === "." || ch === "!" || ch === "?") {
+            // Look ahead to skip whitespace
+            var j = i + 1;
+            while (j < len && /\s/.test(cleaned.charAt(j))) {
+                j++;
+            }
+            // Extract last word in buffer
+            var trimmed = buffer.replace(/^\s+|\s+$/g, "");
+            var parts = trimmed.split(/\s+/);
+            var lastWord = parts[parts.length - 1].toLowerCase();
+            // Check abbreviation
+            if (!abbreviations[lastWord]) {
+                // Valid sentence boundary
+                sentences.push(trimmed);
+                buffer = "";
+                i = j - 1; // jump to next non-space
+            }
         }
-
-        // Check if this is an abbreviation
-        let lastWord = buffer.trim().split(/\s+/).slice(-1)[0];
-        if (!abbreviations.includes(lastWord)) {
-          // If not an abbreviation, treat it as a sentence boundary
-          sentences.push(buffer.trim());
-          buffer = "";
-          i = j - 1; // move to next non-whitespace char
-        }
-      }
-
-      i++;
-  }
-
-  // Push any remaining buffer content
-  if (buffer.trim()) {
-    sentences.push(buffer.trim());
-  }
-
-  return sentences;
+        i++;
+    }
+    // Push any remaining text
+    var leftover = buffer.replace(/^\s+|\s+$/g, "");
+    if (leftover !== "") {
+        sentences.push(leftover);
+    }
+    return sentences;
 }
 
 //Takes a number (n) which represents the n-grams to be compared, then a string (written text) and a second string (scoure text). 
@@ -2157,168 +2212,114 @@ const CheckForKeywordsPreprocessed = function(writing, keywords){
 //For keywords and phrases of 3 and longer, you can use a star * to represent "any word" and it will match; e.g. keyword "get * up" will match "get it up" and "get them up"
 const CheckForKeywordsAndPhrasesPreprocessed = function(writing, keywords){
     let counter = 0;
-    let indexes = [];
-    let lengths = [];
-    let key1grams = [];
-    let key2grams = [];
-    let key3grams = [];
-    let key4grams = [];
-    let key5grams = [];
-    let stringOfWriting = writing.join(" ");
-    let writing2grams = ProvideNgrams(2, stringOfWriting);
-    let writing3grams = ProvideNgrams(3, stringOfWriting);
-    let writing4grams = ProvideNgrams(4, stringOfWriting);
-    let writing5grams = ProvideNgrams(5, stringOfWriting);
-    for (let i=0; i<keywords.length; i++){
-        let tempWC = CountWords(keywords[i]);
-        if (tempWC == 1) {
-            key1grams.push(keywords[i]);
-        } else if (tempWC == 2) {
-            key2grams.push(keywords[i]);
-        } else if (tempWC == 3) {
-            key3grams.push(keywords[i]);
-        } else if (tempWC == 4) {
-            key4grams.push(keywords[i]);
-        } else if (tempWC == 5) {
-            key5grams.push(keywords[i]);
-        }
+    const indexes = [];
+    const lengths = [];
+    const individualCounts = new Map();
+    const keyOrder = [];
+
+    // init counts
+    for (const kw of keywords) {
+        individualCounts.set(kw, 0);
     }
-    let individualCounts = new Map([    ]);
-    for (let i=0; i<keywords.length; i++){
-        individualCounts.set(keywords[i], 0);
+
+    //adds keyOrdermap
+    const keywordIndexMap = new Map();
+    keywords.forEach((kw, idx) => {
+        keywordIndexMap.set(kw, idx);
+    });
+
+
+    // bucket keywords by length, store tokenized form + wildcard info
+    const buckets = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+
+    for (const kw of keywords) {
+        const parts = kw.split(" ");
+        const len = parts.length;
+        if (len < 1 || len > 5) continue;
+
+        const hasWildcard = len >= 3 && parts.includes("*"); // your rule
+        buckets[len].push({
+            raw: kw,
+            parts,
+            hasWildcard
+        });
     }
-    for (let i=0; i<writing.length; i++){
-        for (let j=0; j<key1grams.length; j++){
-            if (writing[i] == key1grams[j]){
-                counter ++;
-                let tempCount = individualCounts.get(key1grams[j]);
-                individualCounts.set(key1grams[j], tempCount+1);
-                indexes.push(i);
-                lengths.push(1);
+
+    const matchWithWildcards = (slice, parts) => {
+        for (let i = 0; i < parts.length; i++) {
+            if (parts[i] !== "*" && parts[i] !== slice[i]) {
+                return false;
             }
         }
-    }
-    for (let i=0; i<writing2grams.length; i++){
-        for (let j=0; j<key2grams.length; j++){
-            if (writing2grams[i] == key2grams[j]){
-                counter ++;
-                let tempCount = individualCounts.get(key2grams[j]);
-                individualCounts.set(key2grams[j], tempCount+1);
-                indexes.push(i);
-                lengths.push(2);
-            }
-        }
-    }
-    for (let i=0; i<writing3grams.length; i++){
-        for (let j=0; j<key3grams.length; j++){
-          let starCheck = key3grams[j].split(" ");
-          if (!starCheck.includes("*")){
-              if (writing3grams[i] == key3grams[j]){
-                  counter ++;
-                  let tempCount = individualCounts.get(key3grams[j]);
-                  individualCounts.set(key3grams[j], tempCount+1);
-                  indexes.push(i);
-                  lengths.push(3);
-              }
-          } else {
-              let writingCheck = writing3grams[i].split(" ");
-              if (writingCheck[0] == starCheck[0] || starCheck[0] == "*"){
-                if (writingCheck[1] == starCheck[1] || starCheck[1] == "*"){
-                  if (writingCheck[2] == starCheck[2] || starCheck[2] == "*"){
-                    counter ++;
-                    let tempCount = individualCounts.get(key3grams[j]);
-                    individualCounts.set(key3grams[j], tempCount+1);
-                    indexes.push(i);
-                    lengths.push(3);
-                  }
-                }
-              }
-          }
-        }
-    }
-    for (let i=0; i<writing4grams.length; i++){
-        for (let j=0; j<key4grams.length; j++){
-          let starCheck = key4grams[j].split(" ");
-          if (!starCheck.includes("*")){
-              if (writing4grams[i] == key4grams[j]){
-                  counter ++;
-                  let tempCount = individualCounts.get(key4grams[j]);
-                  individualCounts.set(key4grams[j], tempCount+1);
-                  indexes.push(i);
-                  lengths.push(4);
-              }
-          } else {
-            let writingCheck = writing4grams[i].split(" ");
-              if (writingCheck[0] == starCheck[0] || starCheck[0] == "*"){
-                if (writingCheck[1] == starCheck[1] || starCheck[1] == "*"){
-                  if (writingCheck[2] == starCheck[2] || starCheck[2] == "*"){
-                    if (writingCheck[3] == starCheck[3] || starCheck[3] == "*"){
-                      counter ++;
-                      let tempCount = individualCounts.get(key4grams[j]);
-                      individualCounts.set(key4grams[j], tempCount+1);
-                      indexes.push(i);
-                      lengths.push(4);
+        return true;
+    };
+
+    // slide over writing and try 1–5-grams at each position
+    for (let start = 0; start < writing.length; start++) {
+        for (let n = 1; n <= 5; n++) {
+            if (start + n > writing.length) break;
+
+            const slice = writing.slice(start, start + n);
+            const keys = buckets[n];
+            if (!keys.length) continue;
+
+            for (const key of keys) {
+                let isMatch = false;
+
+                if (key.hasWildcard) {
+                    // wildcard match (only for len >= 3)
+                    isMatch = matchWithWildcards(slice, key.parts);
+                } else {
+                    // exact match
+                    let ok = true;
+                    for (let i = 0; i < n; i++) {
+                        if (slice[i] !== key.parts[i]) {
+                            ok = false;
+                            break;
+                        }
                     }
-                  }
+                    isMatch = ok;
                 }
-              }
-          }
-        }
-    }
-    for (let i=0; i<writing5grams.length; i++){
-        for (let j=0; j<key5grams.length; j++){
-          let starCheck = key5grams[j].split(" ");
-          if (!starCheck.includes("*")){
-              if (writing5grams[i] == key5grams[j]){
-                  counter ++;
-                  let tempCount = individualCounts.get(key5grams[j]);
-                  individualCounts.set(key5grams[j], tempCount+1);
-                  indexes.push(i);
-                  lengths.push(5);
-              }
-            } else {
-              let writingCheck = writing5grams[i].split(" ");
-              if (writingCheck[0] == starCheck[0] || starCheck[0] == "*"){
-                if (writingCheck[1] == starCheck[1] || starCheck[1] == "*"){
-                  if (writingCheck[2] == starCheck[2] || starCheck[2] == "*"){
-                    if (writingCheck[3] == starCheck[3] || starCheck[3] == "*"){
-                      if (writingCheck[4] == starCheck[4] || starCheck[4] == "*"){
-                        counter ++;
-                        let tempCount = individualCounts.get(key5grams[j]);
-                        individualCounts.set(key5grams[j], tempCount+1);
-                        indexes.push(i);
-                        lengths.push(5);
-                      }
-                    }
-                  }
+
+                if (isMatch) {
+                    counter++;
+                    individualCounts.set(
+                        key.raw,
+                        individualCounts.get(key.raw) + 1
+                    );
+                    indexes.push(start); // start index in writing
+                    lengths.push(n);     // phrase length in words
+                    keyOrder.push(keywordIndexMap.get(key.raw)); // Pushes keyOrders
                 }
-              }
             }
         }
     }
-    return {"count" : counter, "keycounts": individualCounts, "indexes": indexes, "lengths": lengths}
+
+    return {"count" : counter, "keycounts": individualCounts, "indexes": indexes, "lengths": lengths, "keyOrder": keyOrder}
 }
 
 //Takes a pre-processed array of writing. Recommend using lemmatize to create word lists.
 //Provides a count of different words and a map of all different words and the counts of each. Use X.DWCounts.get("word") to retrieve. Use "for (let [key, value] of X.DWcounts)" to itterate
-const DifferentWordsPreprocessed = function(array){
-    let counter = 0;
-    let DWlist = [];
-    for (let i=0; i<array.length; i++){
-        if (!DWlist.includes(array[i])){
-            counter++;
-            DWlist.push(array[i]);
+function DifferentWordsPreprocessed(array) {
+    var counts = new Map();
+    var i, word;
+
+    // Count each word in one pass
+    for (i = 0; i < array.length; i++) {
+        word = array[i];
+
+        if (counts.has(word)) {
+            counts.set(word, counts.get(word) + 1);
+        } else {
+            counts.set(word, 1);
         }
     }
-    let individualCounts = new Map([    ]);
-    for (let i=0; i<DWlist.length; i++){
-        individualCounts.set(DWlist[i], 0);
-    }
-    for (let i=0; i<array.length; i++){
-        let tempCount = individualCounts.get(array[i]);
-        individualCounts.set(array[i], tempCount+1);
-    }
-    return {"NDW" : counter, "DWCounts": individualCounts}
+
+    // NDW = number of unique keys
+    return {
+        NDW: counts.size,
+        DWCounts: counts
+    };
 }
 
 //Takes a pre-processed array of writing. Removes all function words (pronouns, prepositions, articles) - useful for types of text density / TTR ratios.
@@ -2351,69 +2352,80 @@ const CalculateCTTRfromText = function(remove, text){
 
 //Takes a text and creates an array of original words with an index that will match lemmatization (i.e. breaks up the contractions)
 const MakeMatchingArrayforLemmatization = function(text) {
-  const hyphenExceptions = ["pre", "non", "re", "co", "semi", "quasi", "post", "pro", "under", "mid", "inter", "pseudo", "anti", "contra", "multi", "ultra"];
-  const replaceHyphen = (str) => {
-    return str.replace(/\b([a-z0-9]+(?:-[a-z0-9]+)+)\b/gi, (match) => {
-      const parts = match.split("-");
-      const first = parts[0].toLowerCase();
-      if (hyphenExceptions.includes(first)) {
-        return match; // keep as one token
-      }
-      return parts.join(" "); // split into multiple tokens
-    });
-  };
-  // --- apply hyphen splitting to the original text ---
-  let processed = replaceHyphen(text);
-  // --- split into tokens 
-  let originalTokens = processed.split(/\s+/);
-  const aligned = [];
-  originalTokens.forEach(word => {
-      const lower = word.toLowerCase();
-      let expanded = [];
+    let temp1 = text.toLowerCase();
+    let temp2 = temp1.replace(/[#"!$%\^&\*;:?{}=\_`~()]/gm,"");
+    temp2 = temp2.replace(/[\u2014\u2013]/gm, " ");
+    temp2 = temp2.replace(/[\r\n/\\]+/gm, " ");
+    const hyphenExceptions = ["pre", "non", "re", "co", "semi", "quasi", "post", "pro", "under", "mid", "inter", "pseudo", "anti", "contra", "multi", "ultra"];
+    const replaceHyphen = (str) => {
+      return str.replace(/\b([a-z0-9]+(?:-[a-z0-9]+)+)\b/gi, (match) => {
+        const parts = match.split("-");
+        const first = parts[0].toLowerCase();
 
-      // --- contraction logic
-      if (lower === "i'm") {
-        expanded = ["i", "am"];
-      } else if (lower === "won't") {
-        expanded = ["will", "not"];
-      } else if (lower.endsWith("'re")) {
-        expanded = [lower.slice(0, -3), "are"];
-      } else if (lower.endsWith("n't")) {
-        if (lower === "can't") {
-          expanded = [lower.slice(0, -2), "not"];
-        } else {
-          expanded = [lower.slice(0, -3), "not"];
+        // If the first part is an exception, keep the whole word
+        if (hyphenExceptions.includes(first)) {
+          return match;
         }
-      } else if (lower.endsWith("'ve")) {
-        expanded = [lower.slice(0, -3), "have"];
-      } else if (lower.endsWith("'ll")) {
-        expanded = [lower.slice(0, -3), "will"];
-      } else if (lower.endsWith("'d")) {
-        expanded = [lower.slice(0, -2), "would"];
-      } else if (lower.endsWith("'s")) {
-        const base = lower.slice(0, -2);
-        const sIndics = ["here","there","he","she","it","that","this","why","how","what","who"]; //pull these for apostraphes
-        if (sIndics.includes(base)) {
-          expanded = [base, "is"];
-        } else if (lower === "let's") {
-          expanded = ["let", "us"];
-        } else {
-          expanded = [base];
-        }
-      } else if (lower.endsWith("'")) {
-        expanded = [lower.slice(0, -1)];
-      } else {
-        expanded = [lower];
-      }
 
-      // --- alignment logic ---
-      aligned.push(word); // first lemma index gets original token
-      for (let i = 1; i < expanded.length; i++) {
-        aligned.push(""); // subsequent lemma indices get empty placeholders
+        // Otherwise split into separate words
+        return parts.join(" ");
+      });
+    };
+    let temp3 = replaceHyphen(temp2);
+    let temp4 = temp3.replace(/\s\s+/g, ' ');
+    let results1 = temp4.split(" ");
+    let results = [];
+
+    results1.forEach(function(word){
+      let numberTest = /^\d*[\.,\/]?\d+$/.test(word);
+      if (numberTest==true){
+        results.push(word);
+      } else{
+        word = word.replace(/[\.,\/]/g, "");
+        //splits up contractions into words
+        if (word == "i'm") {
+            results.push("i");
+            results.push("am");
+        } else if (word=="won't") {
+            results.push("will");
+            results.push("not");
+        } else if (word.substr(word.length - 3) == "'re") {
+            results.push(word.slice(0,-3));
+            results.push("are");
+        } else if (word.substr(word.length - 3) == "n't") {
+            if (word == "can't"){
+              results.push(word.slice(0,-2));
+              results.push("not");
+            } else {
+              results.push(word.slice(0,-3));
+              results.push("not");
+            }
+        } else if (word.substr(word.length - 3) == "'ve") {
+            results.push(word.slice(0,-3));
+            results.push("have");
+        } else if (word.substr(word.length - 3) == "'ll") {
+            results.push(word.slice(0,-3));
+            results.push("will");
+        } else if (word.substr(word.length - 2) == "'d") {
+            results.push(word.slice(0,-2));
+            results.push("would");
+        } else if (word.substr(word.length - 2) == "'s") {
+          let tempLeft = word.slice(0, -2);
+          let sIndics = ["here", "there", "he", "she", "it", "that", "this", "why", "how", "what", "who"];
+          if (sIndics.includes(tempLeft)) {
+          results.push(word.slice(0,-2));
+          results.push("is");
+          } else if (word == "let's"){
+            results.push(word.slice(0,-2));
+            results.push("us");
+          } else {results.push(word.slice(0,-2));}
+        } else if (word.substr(word.length -1) == "'"){
+            results.push(word.slice(0, -1));
+        } else {results.push(word);}
       }
     });
 
-  return aligned;
+  return results;
 };
 
 //Counts syllables
@@ -2582,57 +2594,81 @@ const grabCleanText = function(elementID){
 
 //Requires loading the ngsl.js first. This one takes an array of pre-lematized words.
 const NGSLPercentage = function(array){
-  let thisNoW = array.length;
-  let thisNGSL = 0;
-  array.forEach(function(word){
-    if (NGSL.includes(word)){
-      thisNGSL++;
+    var total = array.length;
+    var count = 0;
+    // Convert NGSL array to a Set-like lookup table (only once!)
+    if (!NGSL._lookup) {
+        var lookup = {};
+        for (var i = 0; i < NGSL.length; i++) {
+            lookup[NGSL[i]] = 1;
+        }
+        NGSL._lookup = lookup;
     }
-  });
-  return safeDivision(thisNGSL, thisNoW);
+    var table = NGSL._lookup;
+    // Count NGSL words
+    for (var j = 0; j < array.length; j++) {
+        if (table[array[j]]) {
+            count++;
+        }
+    }
+    return safeDivision(count, total);
 }
 
 //Takes an array of pre-lematized words. Runs a check of repeated words/phrases that are suspicious
 const bullshitRepetition = function(array){
-  let numboWords = array.length;
-  let oneWordrepeatIndex = [];
-  let twoWordrepeatIndex = [];
-  let threeWordrepeatIndex = [];
-  for (let i=0; i<array.length-1; i++){
-    let checkWord = array[i];
-    let compWord = array[i+1];
-    if (!oneWordrepeatIndex.includes(i)){
-        if (checkWord == compWord){
-          oneWordrepeatIndex.push(i);
-         }
-      } 
-  }
-  
-  for (let i=0; i<array.length-3; i++){
-    let checkPhrase = array[i] + " " + array[i+1];
-    let compPhrase = array[i+1] + " " + array[i+2];
-    let compPhrase2 = array[i+2] + " " + array[i+3];
-      if (!oneWordrepeatIndex.includes(i) && !twoWordrepeatIndex.includes(i)){
-          if (checkPhrase == compPhrase || checkPhrase == compPhrase2){
-            twoWordrepeatIndex.push(i);
-          }
-      } 
-    
-  }
-  for (let i=0; i<array.length-5; i++){
-    let checkPhrase = array[i] + " " + array[i+1] + " " + array[i+2];
-    let compPhrase = array[i+2] + " " + array[i+3] + " "+ array[i+4];
-    let compPhrase2 = array[i+1] + " " + array[i+2] + " " + array[i+3];
-    let compPhrase3 = array[i+3] + " " + array[i+4] + " "+ array[i+5];
-      if (!oneWordrepeatIndex.includes(i) && !twoWordrepeatIndex.includes(i) && !threeWordrepeatIndex.includes(i)){
-          if (checkPhrase == compPhrase || checkPhrase == compPhrase2 || checkPhrase == compPhrase3){
-            threeWordrepeatIndex.push(i);
-          }
-      } 
-  }
-  let thisBS = oneWordrepeatIndex.length + twoWordrepeatIndex.length + threeWordrepeatIndex.length;
-  return safeDivision(thisBS, numboWords);
+    var numWords = array.length;
+    var oneWord = [];
+    var twoWord = [];
+    var threeWord = [];
+    var i;
+    // --- 1-word repetition ---
+    for (i = 0; i < numWords - 1; i++) {
+        if (array[i] === array[i + 1]) {
+            oneWord.push(i);
+        }
+    }
+    // --- 2-word repetition ---
+    for (i = 0; i < numWords - 3; i++) {
+        if (indexNotFlagged(i, oneWord) && indexNotFlagged(i, twoWord)) {
+            var a1 = array[i] + " " + array[i + 1];
+            var b1 = array[i + 1] + " " + array[i + 2];
+            var b2 = array[i + 2] + " " + array[i + 3];
+
+            if (a1 === b1 || a1 === b2) {
+                twoWord.push(i);
+            }
+        }
+    }
+    // --- 3-word repetition ---
+    for (i = 0; i < numWords - 5; i++) {
+        if (
+            indexNotFlagged(i, oneWord) &&
+            indexNotFlagged(i, twoWord) &&
+            indexNotFlagged(i, threeWord)
+        ) {
+            var p1 = array[i] + " " + array[i + 1] + " " + array[i + 2];
+            var q1 = array[i + 2] + " " + array[i + 3] + " " + array[i + 4];
+            var q2 = array[i + 1] + " " + array[i + 2] + " " + array[i + 3];
+            var q3 = array[i + 3] + " " + array[i + 4] + " " + array[i + 5];
+
+            if (p1 === q1 || p1 === q2 || p1 === q3) {
+                threeWord.push(i);
+            }
+        }
+    }
+
+    var total = oneWord.length + twoWord.length + threeWord.length;
+    return safeDivision(total, numWords);
 }
+
+// Helper: avoid repeated .includes() calls
+function indexNotFlagged(i, arr) {
+    for (var j = 0; j < arr.length; j++) {
+        if (arr[j] === i) return false;
+    }
+    return true;
+}
+
 
 //Takes a pre-lemmatized array and checks for nonsense by using the NGSL and bullshitRepetion functions. Returns true if nonsense is detected, otherwise, false.
 const checkForNonsense = function(array){
@@ -2643,6 +2679,29 @@ const checkForNonsense = function(array){
   } else {
     return false;
   }
+}
+
+const checkForAI = function(text){
+    const signals = ["**","translated by","deepl","delv","—","+1","+2",
+      "i don't have access",
+      "i cannot access",
+      "i can't access",
+      "i can't view",
+      "i can't watch",
+      "i am unable to access",
+      "as an ai",
+      "as a language model",
+      "i can't open that link",
+      "i can't browse the internet",
+      "i cannot browse the internet",
+      "i can't browse",
+      "i don't have the ability to",
+      "if you can provide the text",
+      "if you can provide more details",
+      "sorry, but i can't",
+    ];
+    const lower = text.toLowerCase();
+    return signals.some(sig => lower.includes(sig));
 }
 
 //Requires loading the cefrJ.js first. This one takes an array of pre-lematized words.
