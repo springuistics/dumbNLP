@@ -1469,6 +1469,7 @@ const Lemmatize = function(text){
     let diff_words = [];
     results.forEach(function(word){
       let possible_lemma = "";
+      const vowel = "aeiou";
 
           // --- 1. Irregular verb lookup (fast) ---
           function irreg(word) {
